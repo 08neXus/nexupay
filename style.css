@@ -114,6 +114,7 @@ th {
     background: #f3f4f6;
     font-weight: 600;
 }
+
 th:first-child, td:first-child {
     text-align: center;
 }
