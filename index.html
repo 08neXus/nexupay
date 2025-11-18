@@ -5,79 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installment Calculator</title>
 
-  <!-- Google Fonts & Material Icons -->
+  <!-- Material You Web Components -->
+  <script type="module"
+    src="https://esm.run/@material/web/all.js"></script>
+
+  <!-- Roboto Font -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>Installment Calculator</h1>
+  <div class="card">
 
-    <div class="card">
+    <h2 class="title">📱 Installment Calculator</h2>
 
-      <label>Item Price</label>
-      <input type="number" id="price" placeholder="Enter item price">
+    <!-- MATERIAL YOU INPUT GRID -->
+    <div class="form-grid">
 
-      <label>Down Payment (optional)</label>
-      <input type="number" id="down" placeholder="Enter down payment">
+      <md-filled-text-field label="Item Price (₱)" type="number" id="price"></md-filled-text-field>
 
-      <label>Payment Term</label>
-      <select id="term">
-        <option value="3">3 Months</option>
-        <option value="6">6 Months</option>
-        <option value="9">9 Months</option>
-        <option value="12">12 Months</option>
-        <option value="24">24 Months</option>
-      </select>
+      <md-filled-text-field label="Down Payment (₱)" type="number" id="downpayment"></md-filled-text-field>
 
-      <label>Interest Method</label>
-      <select id="method">
-        <option value="addon">Add-On Interest</option>
-        <option value="amortized">Amortized (Monthly)</option>
-      </select>
+      <md-filled-text-field label="Payment Term (Months)" type="number" id="term"></md-filled-text-field>
 
-      <div class="btn-row">
-        <button id="calc" class="btn">
-          <span class="material-icons">calculate</span> Calculate
-        </button>
+      <md-filled-text-field label="Monthly Interest (%)" type="number" id="interest" value="1.7"></md-filled-text-field>
 
-        <button id="clear" class="btn clear-btn">
-          <span class="material-icons">refresh</span> Clear
-        </button>
-      </div>
     </div>
 
-    <!-- RESULT CARD -->
-    <div id="result" class="result-card hidden fade-reset">
-      <h2>Result</h2>
-      <p><strong>Principal Financed:</strong> <span id="financed"></span></p>
-      <p><strong>Total Interest:</strong> <span id="interest"></span></p>
-      <p><strong>Total Payable:</strong> <span id="total"></span></p>
-      <p><strong>Monthly Payment:</strong> <span id="monthly"></span></p>
-      <p><strong>Interest Rate Applied:</strong> <span id="usedRate"></span></p>
-    </div>
+    <md-filled-button class="calc-btn" onclick="calculate()">
+      <span class="material-icons">calculate</span>
+      Calculate
+    </md-filled-button>
 
-    <!-- BREAKDOWN TABLE -->
-    <table id="breakdown" class="table hidden fade-reset">
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Beginning Balance</th>
-          <th>Interest</th>
-          <th>Principal</th>
-          <th>Ending Balance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <md-tonal-button class="clear-btn" onclick="clearAll()">
+      <span class="material-icons">restart_alt</span>
+      Clear
+    </md-tonal-button>
+
+    <p id="interestInfo" class="fade"></p>
+
+    <!-- MATERIAL YOU TABLE -->
+    <div class="table-wrapper">
+      <table id="breakdownTable" class="table fade">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Beginning</th>
+            <th>Interest</th>
+            <th>Principal</th>
+            <th>Ending</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
   </div>
-
-  <!-- Material Toast -->
-  <div id="toast" class="toast">Fields cleared.</div>
 
   <script src="script.js"></script>
 </body>
