@@ -40,7 +40,7 @@
     <div class="input-group">
       <label>Interest Method</label>
       <select id="method">
-        <option value="addon">Add-on Interest (recommended)</option>
+        <option value="addon">Add-on Interest</option>
         <option value="amortized">Amortized</option>
       </select>
     </div>
@@ -57,7 +57,7 @@
       <p><strong>Monthly Payment:</strong> <span id="monthly"></span></p>
       <p><strong>Interest Rate Applied:</strong> <span id="usedRate"></span></p>
 
-      <h3>Monthly Breakdown</h3>
+      <h3>Payment Breakdown</h3>
       <div class="table-container">
         <table id="breakdown">
           <thead>
@@ -65,6 +65,7 @@
               <th>Month</th>
               <th>Principal</th>
               <th>Interest</th>
+              <th>Remaining Balance</th>
               <th>Total Payment</th>
             </tr>
           </thead>
