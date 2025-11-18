@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Installment Calculator</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="appbar">
+    <span class="material-symbols-rounded">payments</span>
+    <h1>Installment Calculator</h1>
+  </header>
+
+  <main class="container">
+
+    <section class="md-card">
+      <h2 class="card-title">Item Details</h2>
+
+      <div class="md-field">
+        <label>Item Price (₱)</label>
+        <input id="price" type="number" min="0" step="0.01" placeholder="Enter price" />
+      </div>
+
+      <div class="md-field">
+        <label>Term (months)</label>
+        <select id="term">
+          <option value="3">3 Months</option>
+          <option value="6">6 Months</option>
+          <option value="9">9 Months</option>
+          <option value="12">12 Months</option>
+          <option value="24">24 Months</option>
+        </select>
+      </div>
+
+      <div class="md-field">
+        <label>Calculation Method</label>
+        <select id="method">
+          <option value="addon">Add-on Interest</option>
+          <option value="amortized">Amortized</option>
+        </select>
+      </div>
+
+      <div class="md-field">
+        <label>Down Payment (₱)</label>
+        <input id="down" type="number" min="0" step="0.01" value="0" />
+      </div>
+
+      <div class="button-row">
+        <button id="calc" class="md-btn primary">
+          <span class="material-symbols-rounded">calculate</span> Calculate
+        </button>
+        <button id="reset" class="md-btn">
+          <span class="material-symbols-rounded">refresh</span> Reset
+        </button>
+      </div>
+    </section>
+
+    <section class="md-card">
+      <h2 class="card-title">Results</h2>
+
+      <div class="result">
+        <span>Principal financed:</span>
+        <strong id="financed">—</strong>
+      </div>
+      <div class="result">
+        <span>Total interest:</span>
+        <strong id="totalInterest">—</strong>
+      </div>
+      <div class="result">
+        <span>Total payable:</span>
+        <strong id="totalPayable">—</strong>
+      </div>
+      <div class="result">
+        <span>Monthly payment:</span>
+        <strong id="monthly">—</strong>
+      </div>
+      <div class="result">
+        <span>Rate used:</span>
+        <strong id="usedRate">—</strong>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © <strong>Created by nexus08_vin</strong>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
