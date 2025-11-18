@@ -1,32 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installment Calculator</title>
 
-  <!-- Google Material Design + Roboto Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts & Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="container card">
-    <h1><span class="material-icons">payments</span> Installment Calculator</h1>
+  <div class="container">
+    <h1>Installment Calculator</h1>
 
-    <div class="input-group">
-      <label>Item Price (₱)</label>
-      <input id="price" type="number" placeholder="Enter price...">
-    </div>
+    <div class="card">
 
-    <div class="input-group">
+      <label>Item Price</label>
+      <input type="number" id="price" placeholder="Enter item price">
+
       <label>Down Payment (optional)</label>
-      <input id="down" type="number" placeholder="Enter downpayment...">
-    </div>
+      <input type="number" id="down" placeholder="Enter down payment">
 
-    <div class="input-group">
       <label>Payment Term</label>
       <select id="term">
         <option value="3">3 Months</option>
@@ -35,50 +32,53 @@
         <option value="12">12 Months</option>
         <option value="24">24 Months</option>
       </select>
-    </div>
 
-    <div class="input-group">
       <label>Interest Method</label>
       <select id="method">
-        <option value="addon">Add-on Interest</option>
-        <option value="amortized">Amortized</option>
+        <option value="addon">Add-On Interest</option>
+        <option value="amortized">Amortized (Monthly)</option>
       </select>
+
+      <div class="btn-row">
+        <button id="calc" class="btn">
+          <span class="material-icons">calculate</span> Calculate
+        </button>
+
+        <button id="clear" class="btn clear-btn">
+          <span class="material-icons">refresh</span> Clear
+        </button>
+      </div>
     </div>
 
-    <button id="calc" class="btn">
-      <span class="material-icons">calculate</span> Calculate
-    </button>
-
-    <div id="result" class="result-card hidden">
+    <!-- RESULT CARD -->
+    <div id="result" class="result-card hidden fade-reset">
       <h2>Result</h2>
-      <p><strong>Principal financed:</strong> <span id="financed"></span></p>
+      <p><strong>Principal Financed:</strong> <span id="financed"></span></p>
       <p><strong>Total Interest:</strong> <span id="interest"></span></p>
       <p><strong>Total Payable:</strong> <span id="total"></span></p>
       <p><strong>Monthly Payment:</strong> <span id="monthly"></span></p>
       <p><strong>Interest Rate Applied:</strong> <span id="usedRate"></span></p>
-
-      <h3>Payment Breakdown</h3>
-      <div class="table-container">
-        <table id="breakdown">
-          <thead>
-            <tr>
-              <th>Month</th>
-              <th>Principal</th>
-              <th>Interest</th>
-              <th>Remaining Balance</th>
-              <th>Total Payment</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
     </div>
+
+    <!-- BREAKDOWN TABLE -->
+    <table id="breakdown" class="table hidden fade-reset">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Beginning Balance</th>
+          <th>Interest</th>
+          <th>Principal</th>
+          <th>Ending Balance</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
   </div>
 
-  <footer>
-    <p><b>© Created by nexus08_vin</b></p>
-  </footer>
+  <!-- Material Toast -->
+  <div id="toast" class="toast">Fields cleared.</div>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
