@@ -91,3 +91,29 @@ footer {
     color: #777;
     font-size: 14px;
 }
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: right;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #f3f4f6;
+    font-weight: 600;
+}
+th:first-child, td:first-child {
+    text-align: center;
+}
