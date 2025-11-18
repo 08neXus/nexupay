@@ -1,4 +1,4 @@
-// Monthly add-on interest rates
+// Monthly add-on interest rates (lower)
 const rates = {
   3: 1.25,
   6: 1.85,
@@ -8,7 +8,9 @@ const rates = {
 };
 
 function toCurrency(num){
-  return Number(num).toLocaleString('en-PH', { style:'currency', currency:'PHP', maximumFractionDigits:2 });
+  return Number(num).toLocaleString('en-PH', { 
+    style:'currency', currency:'PHP', maximumFractionDigits:2 
+  });
 }
 
 function calculateAddOn(principal, rate, months){
@@ -16,58 +18,29 @@ function calculateAddOn(principal, rate, months){
   const totalInterest = principal * r * months;
   const totalPayable = principal + totalInterest;
   const monthly = totalPayable / months;
+
   return { monthly, totalInterest, totalPayable, rate };
 }
 
 function calculateAmortized(principal, rate, months){
   const r = rate / 100;
-  const monthly = (r === 0) ? principal/months : (r * principal) / (1 - Math.pow(1 + r, -months));
-  const totalPayable = monthly * months;
-  const totalInterest = totalPayable - principal;
+  let monthly, totalPayable, totalInterest;
+
+  if(r === 0){
+    monthly = principal / months;
+    totalInterest = 0;
+    totalPayable = principal;
+  } else {
+    monthly = (r * principal) / (1 - Math.pow(1 + r, -months));
+    totalPayable = monthly * months;
+    totalInterest = totalPayable - principal;
+  }
+
   return { monthly, totalInterest, totalPayable, rate };
 }
 
-function generateBreakdown(principal, totalInterest, months, method){
-  const tbody = document.querySelector("#breakdown tbody");
-  tbody.innerHTML = "";
+document.getElementById("calc").addEventListener("click", () => {
 
-  if(method === "addon"){
-    const monthlyPrincipal = principal / months;
-    const monthlyInterest = totalInterest / months;
-    let remaining = principal;
-    for(let i=1;i<=months;i++){
-      remaining -= monthlyPrincipal;
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${i}</td>
-        <td>${toCurrency(monthlyPrincipal)}</td>
-        <td>${toCurrency(monthlyInterest)}</td>
-        <td>${toCurrency(remaining)}</td>
-        <td>${toCurrency(monthlyPrincipal + monthlyInterest)}</td>
-      `;
-      tbody.appendChild(row);
-    }
-  } else { // amortized
-    let remaining = principal;
-    const ratePerMonth = rates[months] / 100;
-    for(let i=1;i<=months;i++){
-      const monthlyInterest = remaining * (totalInterest / principal) / months; // approximate
-      const monthlyPrincipal = (totalInterest + principal)/months - monthlyInterest;
-      remaining -= monthlyPrincipal;
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${i}</td>
-        <td>${toCurrency(monthlyPrincipal)}</td>
-        <td>${toCurrency(monthlyInterest)}</td>
-        <td>${toCurrency(remaining > 0 ? remaining : 0)}</td>
-        <td>${toCurrency(monthlyPrincipal + monthlyInterest)}</td>
-      `;
-      tbody.appendChild(row);
-    }
-  }
-}
-
-document.getElementById("calc").addEventListener("click", ()=>{
   const price = parseFloat(document.getElementById("price").value);
   const down = parseFloat(document.getElementById("down").value) || 0;
   const term = parseInt(document.getElementById("term").value);
@@ -84,16 +57,79 @@ document.getElementById("calc").addEventListener("click", ()=>{
 
   const principal = price - down;
   const rate = rates[term];
+
   const result = method === "addon"
     ? calculateAddOn(principal, rate, term)
     : calculateAmortized(principal, rate, term);
 
-  document.getElementById("result").classList.remove("hidden");
+  // RESULT DISPLAY
+  const resultCard = document.getElementById("result");
+  resultCard.classList.remove("hidden");
+  setTimeout(() => resultCard.classList.add("show"), 10);
+
   document.getElementById("financed").innerText = toCurrency(principal);
   document.getElementById("interest").innerText = toCurrency(result.totalInterest);
   document.getElementById("total").innerText = toCurrency(result.totalPayable);
   document.getElementById("monthly").innerText = toCurrency(result.monthly);
-  document.getElementById("usedRate").innerText = result.rate + " % / month";
+  document.getElementById("usedRate").innerText = result.rate + "% per month";
 
-  generateBreakdown(principal, result.totalInterest, term, method);
+  // BREAKDOWN TABLE
+  const tbody = document.querySelector("#breakdown tbody");
+  tbody.innerHTML = "";
+
+  let balance = principal;
+
+  for(let i = 1; i <= term; i++){
+    const interest = method === "addon"
+      ? (principal * (rate / 100))
+      : (balance * (rate / 100));
+
+    const principalPayment = result.monthly - interest;
+    const endBalance = balance - principalPayment;
+
+    let row = `
+      <tr>
+        <td>${i}</td>
+        <td>${toCurrency(balance)}</td>
+        <td>${toCurrency(interest)}</td>
+        <td>${toCurrency(principalPayment)}</td>
+        <td>${toCurrency(endBalance)}</td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
+
+    balance = endBalance;
+  }
+
+  const table = document.getElementById("breakdown");
+  table.classList.remove("hidden");
+  setTimeout(() => table.classList.add("show"), 10);
+});
+
+
+// CLEAR BUTTON
+document.getElementById("clear").addEventListener("click", () => {
+
+  // Reset fields
+  document.getElementById("price").value = "";
+  document.getElementById("down").value = "";
+  document.getElementById("term").value = "3";
+  document.getElementById("method").value = "addon";
+
+  // Hide sections
+  const resultCard = document.getElementById("result");
+  const table = document.getElementById("breakdown");
+  resultCard.classList.remove("show");
+  table.classList.remove("show");
+
+  setTimeout(() => {
+    resultCard.classList.add("hidden");
+    table.classList.add("hidden");
+    document.querySelector("#breakdown tbody").innerHTML = "";
+  }, 250);
+
+  // Toast
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2000);
 });
