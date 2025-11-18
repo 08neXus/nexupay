@@ -1,4 +1,4 @@
-// Lower monthly add-on interest rates
+// Monthly add-on interest rates
 const rates = {
   3: 1.25,
   6: 1.85,
@@ -21,48 +21,46 @@ function calculateAddOn(principal, rate, months){
 
 function calculateAmortized(principal, rate, months){
   const r = rate / 100;
-  let monthly, totalPayable, totalInterest;
-  if(r === 0){
-    monthly = principal / months;
-    totalInterest = 0;
-    totalPayable = principal;
-  } else {
-    monthly = (r * principal) / (1 - Math.pow(1 + r, -months));
-    totalPayable = monthly * months;
-    totalInterest = totalPayable - principal;
-  }
+  const monthly = (r === 0) ? principal/months : (r * principal) / (1 - Math.pow(1 + r, -months));
+  const totalPayable = monthly * months;
+  const totalInterest = totalPayable - principal;
   return { monthly, totalInterest, totalPayable, rate };
 }
 
 function generateBreakdown(principal, totalInterest, months, method){
   const tbody = document.querySelector("#breakdown tbody");
-  tbody.innerHTML = ""; // clear previous
+  tbody.innerHTML = "";
+
   if(method === "addon"){
     const monthlyPrincipal = principal / months;
     const monthlyInterest = totalInterest / months;
-    for(let i=1;i<=months;i++){
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${i}</td>
-        <td>${toCurrency(monthlyPrincipal)}</td>
-        <td>${toCurrency(monthlyInterest)}</td>
-        <td>${toCurrency(monthlyPrincipal+monthlyInterest)}</td>
-      `;
-      tbody.appendChild(row);
-    }
-  } else { // amortized
     let remaining = principal;
-    const ratePerMonth = totalInterest / months + (principal/months); // approximate monthly
     for(let i=1;i<=months;i++){
-      const monthlyInterest = remaining*(totalInterest/principal)/months; // approximate
-      const monthlyPrincipal = (totalInterest+principal)/months - monthlyInterest;
       remaining -= monthlyPrincipal;
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${i}</td>
         <td>${toCurrency(monthlyPrincipal)}</td>
         <td>${toCurrency(monthlyInterest)}</td>
-        <td>${toCurrency(monthlyPrincipal+monthlyInterest)}</td>
+        <td>${toCurrency(remaining)}</td>
+        <td>${toCurrency(monthlyPrincipal + monthlyInterest)}</td>
+      `;
+      tbody.appendChild(row);
+    }
+  } else { // amortized
+    let remaining = principal;
+    const ratePerMonth = rates[months] / 100;
+    for(let i=1;i<=months;i++){
+      const monthlyInterest = remaining * (totalInterest / principal) / months; // approximate
+      const monthlyPrincipal = (totalInterest + principal)/months - monthlyInterest;
+      remaining -= monthlyPrincipal;
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${i}</td>
+        <td>${toCurrency(monthlyPrincipal)}</td>
+        <td>${toCurrency(monthlyInterest)}</td>
+        <td>${toCurrency(remaining > 0 ? remaining : 0)}</td>
+        <td>${toCurrency(monthlyPrincipal + monthlyInterest)}</td>
       `;
       tbody.appendChild(row);
     }
