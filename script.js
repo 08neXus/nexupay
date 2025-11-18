@@ -34,6 +34,41 @@ function calculateAmortized(principal, rate, months){
   return { monthly, totalInterest, totalPayable, rate };
 }
 
+function generateBreakdown(principal, totalInterest, months, method){
+  const tbody = document.querySelector("#breakdown tbody");
+  tbody.innerHTML = ""; // clear previous
+  if(method === "addon"){
+    const monthlyPrincipal = principal / months;
+    const monthlyInterest = totalInterest / months;
+    for(let i=1;i<=months;i++){
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${i}</td>
+        <td>${toCurrency(monthlyPrincipal)}</td>
+        <td>${toCurrency(monthlyInterest)}</td>
+        <td>${toCurrency(monthlyPrincipal+monthlyInterest)}</td>
+      `;
+      tbody.appendChild(row);
+    }
+  } else { // amortized
+    let remaining = principal;
+    const ratePerMonth = totalInterest / months + (principal/months); // approximate monthly
+    for(let i=1;i<=months;i++){
+      const monthlyInterest = remaining*(totalInterest/principal)/months; // approximate
+      const monthlyPrincipal = (totalInterest+principal)/months - monthlyInterest;
+      remaining -= monthlyPrincipal;
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${i}</td>
+        <td>${toCurrency(monthlyPrincipal)}</td>
+        <td>${toCurrency(monthlyInterest)}</td>
+        <td>${toCurrency(monthlyPrincipal+monthlyInterest)}</td>
+      `;
+      tbody.appendChild(row);
+    }
+  }
+}
+
 document.getElementById("calc").addEventListener("click", ()=>{
   const price = parseFloat(document.getElementById("price").value);
   const down = parseFloat(document.getElementById("down").value) || 0;
@@ -55,11 +90,12 @@ document.getElementById("calc").addEventListener("click", ()=>{
     ? calculateAddOn(principal, rate, term)
     : calculateAmortized(principal, rate, term);
 
-  // Show results
   document.getElementById("result").classList.remove("hidden");
   document.getElementById("financed").innerText = toCurrency(principal);
   document.getElementById("interest").innerText = toCurrency(result.totalInterest);
   document.getElementById("total").innerText = toCurrency(result.totalPayable);
   document.getElementById("monthly").innerText = toCurrency(result.monthly);
   document.getElementById("usedRate").innerText = result.rate + " % / month";
+
+  generateBreakdown(principal, result.totalInterest, term, method);
 });
