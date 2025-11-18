@@ -1,4 +1,4 @@
-// Updated monthly add-on interest rates
+// Lower monthly add-on interest rates
 const rates = {
   3: 1.25,
   6: 1.85,
@@ -8,33 +8,33 @@ const rates = {
 };
 
 function toCurrency(num){
-  return Number(num).toLocaleString('en-PH',
-    { style: 'currency', currency: 'PHP', maximumFractionDigits: 2 });
+  return Number(num).toLocaleString('en-PH', { style:'currency', currency:'PHP', maximumFractionDigits:2 });
 }
 
 function calculateAddOn(principal, rate, months){
   const r = rate / 100;
   const totalInterest = principal * r * months;
   const totalPayable = principal + totalInterest;
-  return { 
-    monthly: totalPayable / months, 
-    totalInterest, 
-    totalPayable 
-  };
+  const monthly = totalPayable / months;
+  return { monthly, totalInterest, totalPayable, rate };
 }
 
 function calculateAmortized(principal, rate, months){
   const r = rate / 100;
+  let monthly, totalPayable, totalInterest;
   if(r === 0){
-    return { monthly: principal/months, totalInterest: 0, totalPayable: principal };
+    monthly = principal / months;
+    totalInterest = 0;
+    totalPayable = principal;
+  } else {
+    monthly = (r * principal) / (1 - Math.pow(1 + r, -months));
+    totalPayable = monthly * months;
+    totalInterest = totalPayable - principal;
   }
-  const m = (r * principal) / (1 - Math.pow(1 + r, -months));
-  const total = m * months;
-  return { monthly: m, totalInterest: total - principal, totalPayable: total };
+  return { monthly, totalInterest, totalPayable, rate };
 }
 
 document.getElementById("calc").addEventListener("click", ()=>{
-
   const price = parseFloat(document.getElementById("price").value);
   const down = parseFloat(document.getElementById("down").value) || 0;
   const term = parseInt(document.getElementById("term").value);
@@ -51,13 +51,15 @@ document.getElementById("calc").addEventListener("click", ()=>{
 
   const principal = price - down;
   const rate = rates[term];
-  const result = 
-      method === "addon"
-      ? calculateAddOn(principal, rate, term)
-      : calculateAmortized(principal, rate, term);
+  const result = method === "addon"
+    ? calculateAddOn(principal, rate, term)
+    : calculateAmortized(principal, rate, term);
 
+  // Show results
   document.getElementById("result").classList.remove("hidden");
-  document.getElementById("monthly").innerText = toCurrency(result.monthly);
+  document.getElementById("financed").innerText = toCurrency(principal);
   document.getElementById("interest").innerText = toCurrency(result.totalInterest);
   document.getElementById("total").innerText = toCurrency(result.totalPayable);
+  document.getElementById("monthly").innerText = toCurrency(result.monthly);
+  document.getElementById("usedRate").innerText = result.rate + " % / month";
 });
