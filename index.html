@@ -11,7 +11,7 @@
   <div class="container">
     <h1>Loan & Interest Calculator</h1>
 
-    <div class="calculator">
+    <div class="calculator card">
       <div class="form-group">
         <label>Loan Amount (PHP)</label>
         <input type="number" id="loanAmount" placeholder="Enter loan amount">
@@ -38,13 +38,13 @@
 
       <div class="form-group checkbox-group">
         <input type="checkbox" id="autoAddOn">
-        <label for="autoAddOn">Automatically apply monthly add-on interest (for credit cards)</label>
+        <label for="autoAddOn">Automatically apply monthly add-on interest</label>
       </div>
 
       <button id="calculateBtn">Calculate</button>
     </div>
 
-    <div class="table-container">
+    <div class="table-container card">
       <table id="resultTable">
         <thead>
           <tr>
@@ -55,12 +55,11 @@
             <th>Balance</th>
           </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
 
-    <div class="totals">
+    <div class="totals card">
       <p>Total Interest: <span id="totalInterest">0</span> PHP</p>
       <p>Total Payment: <span id="totalPayment">0</span> PHP</p>
     </div>
