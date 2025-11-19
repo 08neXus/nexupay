@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installment Calculator</title>
+  <title>Material You Installment Calculator</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -13,18 +13,21 @@
 
   <div class="container card">
 
-    <h2>📱 Installment Calculator</h2>
+    <h2 class="title">📱 Installment Calculator</h2>
 
+    <!-- Item Price -->
     <div class="form-group">
       <label>Item Price (₱)</label>
       <input type="number" id="price" placeholder="Enter price">
     </div>
 
+    <!-- Downpayment -->
     <div class="form-group">
       <label>Down Payment (₱)</label>
       <input type="number" id="downpayment" placeholder="Optional">
     </div>
 
+    <!-- Term -->
     <div class="form-group">
       <label>Payment Term</label>
       <select id="term" onchange="autoInterest()">
@@ -36,6 +39,7 @@
       </select>
     </div>
 
+    <!-- Interest -->
     <div class="form-group">
       <label>Monthly Interest Rate (%)</label>
       <input type="number" id="interest" readonly>
@@ -44,8 +48,9 @@
     <button class="btn" onclick="calculate()">Calculate</button>
     <button class="btn clear-btn" onclick="clearAll()">Clear</button>
 
-    <p id="interestInfo"></p>
+    <p id="interestInfo" class="info"></p>
 
+    <!-- Breakdown Table -->
     <table id="breakdownTable" class="table">
       <thead>
         <tr>
@@ -60,6 +65,9 @@
     </table>
 
   </div>
+
+  <!-- Snackbar -->
+  <div id="snackbar">Cleared successfully!</div>
 
   <script src="script.js"></script>
 </body>
