@@ -1,55 +1,155 @@
 body {
   font-family: "Roboto", sans-serif;
   margin: 0;
-  background: #f2f2f2;
+  background: #f1f1f8;
   padding: 20px;
 }
 
+/* Material You Card */
 .card {
   background: white;
   padding: 25px;
-  border-radius: 12px;
+  border-radius: 22px;
   max-width: 600px;
   margin: auto;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  animation: fadeIn 0.5s ease;
+}
+
+.title {
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .form-group {
   margin-bottom: 15px;
 }
 
+label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
+}
+
 input, select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 15px;
-  border-radius: 6px;
+  border-radius: 12px;
   border: 1px solid #ccc;
+  background: #fafafa;
+  transition: 0.2s;
 }
 
+/* Focus Glow */
+input:focus, select:focus {
+  outline: none;
+  border-color: #6750a4;
+  box-shadow: 0 0 8px rgba(103,80,164,0.4);
+}
+
+/* Buttons Material You */
 .btn {
   width: 100%;
-  padding: 13px;
-  background: #1976d2;
+  padding: 14px;
+  background: #6750a4;
   color: white;
   border: none;
+  border-radius: 18px;
   margin-top: 15px;
-  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
-.clear-btn { background: #777; }
 
+.clear-btn {
+  background: #9c9c9c;
+}
+
+/* Ripple Effect */
+.btn:active::after {
+  content: "";
+  position: absolute;
+  width: 250%;
+  height: 250%;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  animation: ripple 0.4s ease-out;
+}
+
+@keyframes ripple {
+  from { transform: scale(0); opacity: 0.9; }
+  to { transform: scale(1); opacity: 0; }
+}
+
+/* Table */
 .table {
   width: 100%;
   margin-top: 25px;
   border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-th, td {
+th {
+  background: #ece6f0;
+  padding: 12px;
+}
+
+td {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
+  border-bottom: 1px solid #eee;
 }
 
 tr:nth-child(even) {
-  background: #f9f9f9;
+  background: #fafafa;
+}
+
+.info {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Snackbar */
+#snackbar {
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #6750a4;
+  color: #fff;
+  text-align: center;
+  border-radius: 12px;
+  padding: 14px;
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  z-index: 999;
+  font-size: 15px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  animation: snackbarFade 0.5s, snackbarOut 0.5s 2.5s forwards;
+}
+
+@keyframes snackbarFade {
+  from { opacity: 0; bottom: 20px; }
+  to { opacity: 1; bottom: 40px; }
+}
+
+@keyframes snackbarOut {
+  to { opacity: 0; bottom: 20px; }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
