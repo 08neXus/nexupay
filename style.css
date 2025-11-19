@@ -1,161 +1,106 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
 body {
-  font-family: "Roboto Flex", sans-serif;
-  background: #f6f5f9;
   margin: 0;
-  padding: 20px;
+  background-color: #f5f5f5;
+  color: #333;
 }
 
-/* MATERIAL YOU CARD */
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 28px;
-  max-width: 650px;
-  margin: auto;
-  box-shadow:
-    0px 3px 5px rgba(0,0,0,0.1),
-    0px 6px 10px rgba(0,0,0,0.08);
-  animation: fadeIn 0.4s ease;
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 18px;
-  color: #1b1b1f;
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.calculator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .form-group {
-  margin-bottom: 16px;
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
 }
 
-label {
+.form-group label {
+  margin-bottom: 0.5rem;
   font-weight: 500;
-  margin-bottom: 6px;
-  display: block;
-  color: #3d3d3d;
 }
 
-/* INPUTS */
-input, select {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
+.form-group input,
+.form-group select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  background: #f7f7fb;
-  font-size: 15px;
-  transition: 0.2s;
 }
 
-input:focus, select:focus {
-  outline: none;
-  border-color: #6750a4;
-  background: #ffffff;
-  box-shadow: 0 0 8px rgba(103,80,164,0.4);
+.checkbox-group {
+  flex: 1 1 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* BUTTONS MATERIAL YOU */
-.btn {
-  width: 100%;
-  padding: 15px;
-  background: #6750a4;
-  color: white;
-  border: none;
-  border-radius: 18px;
-  margin-top: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+button {
+  flex: 1 1 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
   font-weight: 500;
+  background-color: #6200ee;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.clear-btn {
-  background: #8f8f8f;
+button:hover {
+  background-color: #4500b5;
 }
 
-/* RIPPLE EFFECT */
-.btn:active::after {
-  content: "";
-  position: absolute;
-  width: 250%;
-  height: 250%;
-  background: rgba(255,255,255,0.45);
-  border-radius: 50%;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  animation: ripple 0.35s ease-out;
-}
-
-@keyframes ripple {
-  from { opacity: 0.8; transform: scale(0); }
-  to { opacity: 0; transform: scale(1); }
-}
-
-/* RESPONSIVE TABLE WRAPPER */
-.table-wrapper {
+.table-container {
+  margin-top: 2rem;
   overflow-x: auto;
-  margin-top: 20px;
 }
 
-.table {
+table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 550px;
+  min-width: 600px;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: right;
+  border: 1px solid #ddd;
 }
 
 th {
-  background: #ece6f0;
-  padding: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-}
-
-tr:nth-child(even) {
-  background: #fafafa;
-}
-
-/* Snackbar */
-#snackbar {
-  visibility: hidden;
-  min-width: 200px;
-  background-color: #6750a4;
+  background-color: #6200ee;
   color: #fff;
+}
+
+td:first-child, th:first-child {
   text-align: center;
-  border-radius: 14px;
-  padding: 14px;
-  position: fixed;
-  left: 50%;
-  bottom: 35px;
-  transform: translateX(-50%);
-  z-index: 999;
 }
 
-#snackbar.show {
-  visibility: visible;
-  animation: fadein 0.4s, fadeout 0.4s 2.5s forwards;
-}
-
-@keyframes fadein {
-  from { opacity: 0; bottom: 20px; }
-  to { opacity: 1; bottom: 35px; }
-}
-
-@keyframes fadeout {
-  to { opacity: 0; bottom: 20px; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.totals {
+  margin-top: 1rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
