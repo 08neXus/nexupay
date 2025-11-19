@@ -1,96 +1,64 @@
-function autoInterest() {
-  const term = parseInt(document.getElementById("term").value);
-  const interestField = document.getElementById("interest");
+const loanAmountInput = document.getElementById('loanAmount');
+const interestRateInput = document.getElementById('interestRate');
+const loanTermInput = document.getElementById('loanTerm');
+const interestTypeSelect = document.getElementById('interestType');
+const autoAddOnCheckbox = document.getElementById('autoAddOn');
+const calculateBtn = document.getElementById('calculateBtn');
+const resultTableBody = document.querySelector('#resultTable tbody');
+const totalInterestEl = document.getElementById('totalInterest');
+const totalPaymentEl = document.getElementById('totalPayment');
 
-  const rates = {
-    3: 1.4,
-    6: 1.5,
-    9: 1.6,
-    12: 1.7,
-    24: 2.0
-  };
+calculateBtn.addEventListener('click', () => {
+  const principal = parseFloat(loanAmountInput.value);
+  const rate = parseFloat(interestRateInput.value) / 100;
+  const months = parseInt(loanTermInput.value);
+  const type = interestTypeSelect.value;
+  const autoAddOn = autoAddOnCheckbox.checked;
 
-  interestField.value = rates[term];
-}
+  if (!principal || !rate || !months) return alert('Please fill all fields correctly.');
 
-autoInterest();
-
-
-function calculate() {
-  let price = parseFloat(document.getElementById("price").value);
-  let down = parseFloat(document.getElementById("downpayment").value) || 0;
-  let term = parseInt(document.getElementById("term").value);
-  let interestType = document.getElementById("interestType").value;
-  let interestRate = parseFloat(document.getElementById("interest").value) / 100;
-
-  if (!price) {
-    showSnackbar("Enter item price");
-    return;
-  }
-
-  let balance = price - down;
-  let tbody = document.querySelector("#breakdownTable tbody");
-  tbody.innerHTML = "";
-
-  let monthlyPayment = 0;
+  let balance = principal;
   let totalInterest = 0;
+  let tableHTML = '';
 
-  // ADD-ON INTEREST
-  if (interestType === "addon") {
-    monthlyPayment = (balance * (1 + interestRate * term)) / term;
+  for (let m = 1; m <= months; m++) {
+    let interest = 0;
+    let payment = 0;
 
-  // AMORTIZED INTEREST
-  } else {
-    monthlyPayment = (balance * interestRate) /
-      (1 - Math.pow(1 + interestRate, -term));
-  }
+    if (type === 'simple') {
+      interest = principal * rate;
+      payment = (principal / months) + interest;
+    } else if (type === 'amortized') {
+      const monthlyRate = rate;
+      payment = (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
+      interest = balance * monthlyRate;
+    } else if (type === 'compound') {
+      interest = balance * rate;
+      payment = (principal / months) + interest;
+    }
 
-  let begin = balance;
+    if (autoAddOn) {
+      interest = principal * rate;
+      payment = (principal / months) + interest;
+    }
 
-  for (let i = 1; i <= term; i++) {
-    let interest = begin * interestRate;
-    let principal = monthlyPayment - interest;
-    let end = begin - principal;
+    balance -= (payment - interest);
+    if (balance < 0) balance = 0;
 
     totalInterest += interest;
 
-    tbody.innerHTML += `
+    tableHTML += `
       <tr>
-        <td>${i}</td>
-        <td>₱${begin.toFixed(2)}</td>
-        <td>₱${interest.toFixed(2)}</td>
-        <td>₱${principal.toFixed(2)}</td>
-        <td>₱${end.toFixed(2)}</td>
+        <td>${m}</td>
+        <td>${(payment - interest).toFixed(2)}</td>
+        <td>${interest.toFixed(2)}</td>
+        <td>${payment.toFixed(2)}</td>
+        <td>${balance.toFixed(2)}</td>
       </tr>
     `;
-
-    begin = end;
   }
 
-  document.getElementById("interestInfo").innerHTML =
-    `Total interest applied: <b>₱${totalInterest.toFixed(2)}</b>`;
-}
-
-
-
-function clearAll() {
-  document.getElementById("price").value = "";
-  document.getElementById("downpayment").value = "";
-  document.querySelector("#breakdownTable tbody").innerHTML = "";
-  document.getElementById("interestInfo").innerHTML = "";
-  autoInterest();
-  showSnackbar("Cleared successfully!");
-}
-
-
-
-/* Snackbar */
-function showSnackbar(message) {
-  const bar = document.getElementById("snackbar");
-  bar.innerText = message;
-  bar.className = "show";
-
-  setTimeout(() => {
-    bar.className = bar.className.replace("show", "");
-  }, 2800);
-}
+  resultTableBody.innerHTML = tableHTML;
+  totalInterestEl.textContent = totalInterest.toFixed(2);
+  totalPaymentEl.textContent = (principal + totalInterest).toFixed(2);
+});
