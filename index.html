@@ -3,31 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Material You Installment Calculator</title>
+  <title>Installment Calculator</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Material 3 Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600&display=swap">
+  
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <div class="container card">
-
     <h2 class="title">📱 Installment Calculator</h2>
 
-    <!-- Item Price -->
+    <!-- PRICE -->
     <div class="form-group">
       <label>Item Price (₱)</label>
       <input type="number" id="price" placeholder="Enter price">
     </div>
 
-    <!-- Downpayment -->
+    <!-- DOWNPAYMENT -->
     <div class="form-group">
       <label>Down Payment (₱)</label>
       <input type="number" id="downpayment" placeholder="Optional">
     </div>
 
-    <!-- Term -->
+    <!-- TERM -->
     <div class="form-group">
       <label>Payment Term</label>
       <select id="term" onchange="autoInterest()">
@@ -39,7 +40,16 @@
       </select>
     </div>
 
-    <!-- Interest -->
+    <!-- INTEREST TYPE -->
+    <div class="form-group">
+      <label>Interest Type</label>
+      <select id="interestType">
+        <option value="addon">Monthly Add-On Interest</option>
+        <option value="amortized">Amortized (Bank Formula)</option>
+      </select>
+    </div>
+
+    <!-- INTEREST RATE -->
     <div class="form-group">
       <label>Monthly Interest Rate (%)</label>
       <input type="number" id="interest" readonly>
@@ -50,19 +60,21 @@
 
     <p id="interestInfo" class="info"></p>
 
-    <!-- Breakdown Table -->
-    <table id="breakdownTable" class="table">
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Beginning Balance</th>
-          <th>Interest</th>
-          <th>Principal</th>
-          <th>Ending Balance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <!-- TABLE WRAPPER FOR MOBILE -->
+    <div class="table-wrapper">
+      <table id="breakdownTable" class="table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Beg. Balance</th>
+            <th>Interest</th>
+            <th>Principal</th>
+            <th>End Balance</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
   </div>
 
