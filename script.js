@@ -20,24 +20,34 @@ function calculate() {
   let price = parseFloat(document.getElementById("price").value);
   let down = parseFloat(document.getElementById("downpayment").value) || 0;
   let term = parseInt(document.getElementById("term").value);
+  let interestType = document.getElementById("interestType").value;
   let interestRate = parseFloat(document.getElementById("interest").value) / 100;
 
   if (!price) {
-    showSnackbar("Please enter an item price");
+    showSnackbar("Enter item price");
     return;
   }
 
   let balance = price - down;
-  let monthlyPayment = (balance * (1 + interestRate * term)) / term;
-
   let tbody = document.querySelector("#breakdownTable tbody");
   tbody.innerHTML = "";
 
-  let begin = balance;
+  let monthlyPayment = 0;
   let totalInterest = 0;
 
-  for (let i = 1; i <= term; i++) {
+  // ADD-ON INTEREST
+  if (interestType === "addon") {
+    monthlyPayment = (balance * (1 + interestRate * term)) / term;
 
+  // AMORTIZED INTEREST
+  } else {
+    monthlyPayment = (balance * interestRate) /
+      (1 - Math.pow(1 + interestRate, -term));
+  }
+
+  let begin = balance;
+
+  for (let i = 1; i <= term; i++) {
     let interest = begin * interestRate;
     let principal = monthlyPayment - interest;
     let end = begin - principal;
@@ -69,13 +79,12 @@ function clearAll() {
   document.querySelector("#breakdownTable tbody").innerHTML = "";
   document.getElementById("interestInfo").innerHTML = "";
   autoInterest();
-
   showSnackbar("Cleared successfully!");
 }
 
 
 
-/* Material You Snackbar */
+/* Snackbar */
 function showSnackbar(message) {
   const bar = document.getElementById("snackbar");
   bar.innerText = message;
