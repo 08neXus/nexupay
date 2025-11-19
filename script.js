@@ -13,7 +13,7 @@ function autoInterest() {
   interestField.value = rates[term];
 }
 
-autoInterest(); // initialize on load
+autoInterest();
 
 
 function calculate() {
@@ -23,7 +23,7 @@ function calculate() {
   let interestRate = parseFloat(document.getElementById("interest").value) / 100;
 
   if (!price) {
-    alert("Enter a valid item price.");
+    showSnackbar("Please enter an item price");
     return;
   }
 
@@ -37,6 +37,7 @@ function calculate() {
   let totalInterest = 0;
 
   for (let i = 1; i <= term; i++) {
+
     let interest = begin * interestRate;
     let principal = monthlyPayment - interest;
     let end = begin - principal;
@@ -60,10 +61,27 @@ function calculate() {
     `Total interest applied: <b>₱${totalInterest.toFixed(2)}</b>`;
 }
 
+
+
 function clearAll() {
   document.getElementById("price").value = "";
   document.getElementById("downpayment").value = "";
-  document.getElementById("interestInfo").innerHTML = "";
   document.querySelector("#breakdownTable tbody").innerHTML = "";
+  document.getElementById("interestInfo").innerHTML = "";
   autoInterest();
+
+  showSnackbar("Cleared successfully!");
+}
+
+
+
+/* Material You Snackbar */
+function showSnackbar(message) {
+  const bar = document.getElementById("snackbar");
+  bar.innerText = message;
+  bar.className = "show";
+
+  setTimeout(() => {
+    bar.className = bar.className.replace("show", "");
+  }, 2800);
 }
