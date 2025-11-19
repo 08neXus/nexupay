@@ -1,120 +1,128 @@
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto Flex", sans-serif;
+  background: #f6f5f9;
   margin: 0;
-  background: #f1f1f8;
   padding: 20px;
 }
 
-/* Material You Card */
+/* MATERIAL YOU CARD */
 .card {
   background: white;
   padding: 25px;
-  border-radius: 22px;
-  max-width: 600px;
+  border-radius: 28px;
+  max-width: 650px;
   margin: auto;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  animation: fadeIn 0.5s ease;
+  box-shadow:
+    0px 3px 5px rgba(0,0,0,0.1),
+    0px 6px 10px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease;
 }
 
 .title {
+  font-size: 22px;
   font-weight: 600;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 18px;
+  color: #1b1b1f;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 label {
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   display: block;
-  color: #555;
+  color: #3d3d3d;
 }
 
+/* INPUTS */
 input, select {
   width: 100%;
-  padding: 12px;
-  font-size: 15px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 16px;
   border: 1px solid #ccc;
-  background: #fafafa;
+  background: #f7f7fb;
+  font-size: 15px;
   transition: 0.2s;
 }
 
-/* Focus Glow */
 input:focus, select:focus {
   outline: none;
   border-color: #6750a4;
+  background: #ffffff;
   box-shadow: 0 0 8px rgba(103,80,164,0.4);
 }
 
-/* Buttons Material You */
+/* BUTTONS MATERIAL YOU */
 .btn {
   width: 100%;
-  padding: 14px;
+  padding: 15px;
   background: #6750a4;
   color: white;
   border: none;
   border-radius: 18px;
-  margin-top: 15px;
+  margin-top: 10px;
   font-size: 16px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  font-weight: 500;
 }
 
 .clear-btn {
-  background: #9c9c9c;
+  background: #8f8f8f;
 }
 
-/* Ripple Effect */
+/* RIPPLE EFFECT */
 .btn:active::after {
   content: "";
   position: absolute;
   width: 250%;
   height: 250%;
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.45);
   border-radius: 50%;
-  transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
-  animation: ripple 0.4s ease-out;
+  transform: translate(-50%, -50%);
+  animation: ripple 0.35s ease-out;
 }
 
 @keyframes ripple {
-  from { transform: scale(0); opacity: 0.9; }
-  to { transform: scale(1); opacity: 0; }
+  from { opacity: 0.8; transform: scale(0); }
+  to { opacity: 0; transform: scale(1); }
 }
 
-/* Table */
+/* RESPONSIVE TABLE WRAPPER */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
 .table {
   width: 100%;
-  margin-top: 25px;
   border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
+  min-width: 550px;
 }
 
 th {
   background: #ece6f0;
-  padding: 12px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 td {
   padding: 10px;
   border-bottom: 1px solid #eee;
+  font-size: 14px;
 }
 
 tr:nth-child(even) {
   background: #fafafa;
-}
-
-.info {
-  margin-top: 10px;
-  font-weight: 500;
-  color: #333;
 }
 
 /* Snackbar */
@@ -124,31 +132,29 @@ tr:nth-child(even) {
   background-color: #6750a4;
   color: #fff;
   text-align: center;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 14px;
   position: fixed;
   left: 50%;
-  bottom: 40px;
+  bottom: 35px;
   transform: translateX(-50%);
   z-index: 999;
-  font-size: 15px;
 }
 
 #snackbar.show {
   visibility: visible;
-  animation: snackbarFade 0.5s, snackbarOut 0.5s 2.5s forwards;
+  animation: fadein 0.4s, fadeout 0.4s 2.5s forwards;
 }
 
-@keyframes snackbarFade {
+@keyframes fadein {
   from { opacity: 0; bottom: 20px; }
-  to { opacity: 1; bottom: 40px; }
+  to { opacity: 1; bottom: 35px; }
 }
 
-@keyframes snackbarOut {
+@keyframes fadeout {
   to { opacity: 0; bottom: 20px; }
 }
 
-/* Fade in animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
