@@ -1,22 +1,40 @@
+function autoInterest() {
+  const term = parseInt(document.getElementById("term").value);
+  const interestField = document.getElementById("interest");
+
+  const rates = {
+    3: 1.4,
+    6: 1.5,
+    9: 1.6,
+    12: 1.7,
+    24: 2.0
+  };
+
+  interestField.value = rates[term];
+}
+
+autoInterest(); // initialize on load
+
+
 function calculate() {
   let price = parseFloat(document.getElementById("price").value);
   let down = parseFloat(document.getElementById("downpayment").value) || 0;
   let term = parseInt(document.getElementById("term").value);
   let interestRate = parseFloat(document.getElementById("interest").value) / 100;
 
-  if (!price || !term) {
-    alert("Please enter valid values.");
+  if (!price) {
+    alert("Enter a valid item price.");
     return;
   }
 
   let balance = price - down;
+  let monthlyPayment = (balance * (1 + interestRate * term)) / term;
+
   let tbody = document.querySelector("#breakdownTable tbody");
   tbody.innerHTML = "";
 
   let begin = balance;
   let totalInterest = 0;
-
-  let monthlyPayment = (balance * (1 + interestRate * term)) / term;
 
   for (let i = 1; i <= term; i++) {
     let interest = begin * interestRate;
@@ -26,7 +44,7 @@ function calculate() {
     totalInterest += interest;
 
     tbody.innerHTML += `
-      <tr class="fade">
+      <tr>
         <td>${i}</td>
         <td>₱${begin.toFixed(2)}</td>
         <td>₱${interest.toFixed(2)}</td>
@@ -45,8 +63,7 @@ function calculate() {
 function clearAll() {
   document.getElementById("price").value = "";
   document.getElementById("downpayment").value = "";
-  document.getElementById("term").value = "";
-  document.getElementById("interest").value = "1.7";
   document.getElementById("interestInfo").innerHTML = "";
   document.querySelector("#breakdownTable tbody").innerHTML = "";
+  autoInterest();
 }
