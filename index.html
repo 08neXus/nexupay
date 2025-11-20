@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Installment Calculator</title>
+  <title>Installment Calculator — Material</title>
 
   <!-- Roboto + Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -17,11 +17,33 @@
       <img class="brand-icon" src="/mnt/data/83B687B6-6948-45BA-9902-4CF2F323084F.jpeg" alt="app icon">
       <div>
         <h1 class="title">Installment Calculator</h1>
-        <p class="subtitle">by melvinpangilinan</p>
+        <p class="subtitle">Material You style</p>
       </div>
     </header>
 
     <section class="card">
+
+      <!-- ⭐ Add-On Rate Matrix -->
+      <div class="addon-matrix card-matrix">
+        <h3>Fixed Monthly Add-On Rate Matrix</h3>
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Term (Months)</th>
+              <th>Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>3</td><td>1.5%</td></tr>
+            <tr><td>6</td><td>2%</td></tr>
+            <tr><td>9</td><td>2.5%</td></tr>
+            <tr><td>12</td><td>3%</td></tr>
+            <tr><td>24</td><td>4%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- END Add-On Matrix -->
+
       <div class="row">
         <label class="label">Item Price (₱)</label>
         <input id="price" type="number" inputmode="decimal" placeholder="Enter item price" />
@@ -58,6 +80,7 @@
         <input id="customInterest" type="number" placeholder="Enter custom interest %" disabled />
       </div>
 
+      <!-- ⭐ Computation Summary -->
       <div class="row summary-row hidden" id="summaryCard" aria-live="polite">
         <div class="summary-item">
           <div class="s-label">Principal</div>
@@ -77,28 +100,6 @@
         <button id="calcBtn" class="btn primary"><span class="material-symbols-outlined">calculate</span> Calculate</button>
         <button id="clearBtn" class="btn neutral"><span class="material-symbols-outlined">refresh</span> Clear</button>
       </div>
-<!-- Add-on Rate Matrix -->
-<div class="addon-matrix card-matrix">
-  <h3>Fixed Monthly Add-On Rate Matrix</h3>
-  <table class="matrix-table">
-    <thead>
-      <tr>
-        <th>Term (Months)</th>
-        <th>Rate</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>3</td><td>1.5%</td></tr>
-      <tr><td>6</td><td>2%</td></tr>
-      <tr><td>9</td><td>2.5%</td></tr>
-      <tr><td>12</td><td>3%</td></tr>
-      <tr><td>24</td><td>4%</td></tr>
-    </tbody>
-  </table>
-</div>
-
-      <!-- Computation summary -->
-      <div id="computationSummary" class="computation-summary hidden"></div>
 
       <div class="table-wrapper" aria-live="polite">
         <table id="breakdown" class="table">
@@ -119,7 +120,7 @@
     <div id="toast" class="toast" role="status" aria-hidden="true">Cleared</div>
 
     <footer class="footer">
-      © Created by nexus08_vin
+      © <b>Created by</b> nexus08_vin
     </footer>
   </main>
 
