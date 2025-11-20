@@ -1,85 +1,89 @@
 body {
-    font-family: "Inter", sans-serif;
-    background: #f9f9f9;
-    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f7f7fb;
+    margin: 0;
+    padding: 0;
 }
 
 .card {
-    background: #fff;
-    padding: 22px;
-    border-radius: 18px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
     max-width: 420px;
-    margin: auto;
+    margin: 20px auto;
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.title {
-    font-size: 22px;
-    font-weight: 700;
+h2 {
     margin-bottom: 15px;
+    font-weight: 700;
 }
 
 label {
-    font-weight: 600;
-    margin-top: 10px;
     display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 input, select {
     width: 100%;
     padding: 12px;
+    margin-top: 6px;
+    border: 1px solid #dcdcdc;
     border-radius: 10px;
-    border: 1px solid #d3d3d3;
-    margin-top: 5px;
-    font-size: 15px;
+    font-size: 16px;
 }
 
-.custom-row {
+.checkRow {
     display: flex;
-    gap: 10px;
     align-items: center;
-    margin-top: 10px;
-}
-
-.custom-row input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 12px;
-    border-radius: 10px;
-    border: none;
-    font-size: 17px;
-    font-weight: 600;
+    margin-top: 14px;
+    gap: 8px;
 }
 
 .calc {
-    background: #6200EE;
+    margin-top: 18px;
+    width: 100%;
+    background: #7200ff;
+    padding: 14px;
+    border: none;
     color: white;
+    font-size: 18px;
+    border-radius: 12px;
 }
 
 .clear {
-    background: #D32F2F;
+    margin-top: 10px;
+    width: 100%;
+    background: #d10000;
+    padding: 14px;
+    border: none;
     color: white;
+    font-size: 18px;
+    border-radius: 12px;
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
 }
 
 table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
-    font-size: 14px;
+    margin-top: 10px;
 }
 
 th, td {
-    padding: 10px 6px;
+    padding: 10px;
     border-bottom: 1px solid #eee;
     text-align: center;
 }
 
-thead {
-    background: #6200EE;
+th {
+    background: #5a00d4;
     color: white;
+    position: sticky;
+    top: 0;
 }
