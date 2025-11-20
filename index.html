@@ -1,69 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phone Installment Calculator</title>
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
-
-<body>
-
-<div class="container">
-
-    <h2>📱 Phone Installment Calculator</h2>
+<div class="card">
+    <h2 class="title">📱 Phone Installment Calculator</h2>
 
     <label>Item Price</label>
     <input type="number" id="price" placeholder="Enter item price">
 
     <label>Payment Term</label>
-    <select id="term" onchange="updateAutoRate()">
+    <select id="term">
         <option value="3">3 months</option>
         <option value="6">6 months</option>
         <option value="9">9 months</option>
         <option value="12">12 months</option>
-        <option value="24">24 months</option>
     </select>
 
-    <label class="custom-interest-row">
-        <input type="checkbox" id="customInterestToggle" onchange="toggleCustomInterest()">
-        Use custom interest rate (%)
-    </label>
-
-    <input type="number" id="customInterest" placeholder="Enter custom interest %" disabled>
+    <div class="custom-row">
+        <input type="checkbox" id="customToggle">
+        <input type="number" id="customInterest" placeholder="Enter custom interest %" disabled>
+    </div>
 
     <label>Interest Type</label>
     <select id="interestType">
-        <option value="simple">Simple Interest (Monthly Add-On)</option>
         <option value="amortized">Amortized</option>
+        <option value="simple">Simple</option>
+        <option value="fixed">Fixed</option>
+        <option value="compound">Compound</option>
     </select>
 
-    <button onclick="calculate()">Calculate</button>
-    <button class="clear-btn" onclick="clearForm()">Clear</button>
+    <button class="calc">Calculate</button>
+    <button class="clear">Clear</button>
 
-    <p id="resultInfo"></p>
-
-    <div class="table-container">
-        <table id="breakdown">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Principal</th>
-                    <th>Interest</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
-
-<div id="toast">Reset successful</div>
-
-<script src="script.js"></script>
-</body>
-</html>
