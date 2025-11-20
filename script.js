@@ -18,6 +18,7 @@ const customInterestEl = document.getElementById('customInterest');
 const calcBtn = document.getElementById('calcBtn');
 const clearBtn = document.getElementById('clearBtn');
 const breakdownTbody = document.querySelector('#breakdown tbody');
+const computationSummary = document.getElementById('computationSummary');
 const toast = document.getElementById('toast');
 const summaryCard = document.getElementById('summaryCard');
 const principalVal = document.getElementById('principalVal');
@@ -35,9 +36,7 @@ function updateAutoRate(){
   }
 }
 termEl.addEventListener('change', updateAutoRate);
-
-// Run once on page load
-updateAutoRate();
+updateAutoRate(); // run on load
 
 /* Toggle custom interest input */
 customToggleEl.addEventListener('change', () => {
@@ -82,16 +81,28 @@ calcBtn.addEventListener('click', () => {
 
   const r = ratePct / 100; // monthly decimal
   breakdownTbody.innerHTML = '';
+  computationSummary.classList.remove('hidden');
 
   let monthlyPayment = 0;
   let totalInterest = 0;
   let remaining = price;
 
-  if (interestType === 'simple'){ // monthly add-on (simple)
-    totalInterest = price * r * term;
-    const totalPayable = price + totalInterest;
-    monthlyPayment = totalPayable / term;
+  /* Show computation summary above table */
+  if (interestType === 'simple') {
+    const totalInterestCalc = price * r * term;
+    const monthlyPaymentCalc = (price + totalInterestCalc) / term;
+    computationSummary.innerHTML = `
+      <span>Monthly Add-On Calculation:</span><br>
+      Total Interest = ${toPHP(price)} × ${ratePct.toFixed(2)}% × ${term} months = ${toPHP(totalInterestCalc)}<br>
+      Monthly Payment = (${toPHP(price)} + ${toPHP(totalInterestCalc)}) ÷ ${term} = ${toPHP(monthlyPaymentCalc)}
+    `;
+  } else {
+    computationSummary.innerHTML = `<span>Computation:</span> Interest Rate = ${ratePct.toFixed(2)}% per month, Term = ${term} months`;
+  }
 
+  if (interestType === 'simple'){ 
+    totalInterest = price * r * term;
+    monthlyPayment = (price + totalInterest) / term;
     const monthlyPrincipal = price / term;
     const monthlyInterest = totalInterest / term;
 
@@ -100,18 +111,8 @@ calcBtn.addEventListener('click', () => {
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, price - monthlyPrincipal*(i-1), monthlyInterest, monthlyPrincipal, endBal));
     }
 
-    // show summary
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-
   } else if (interestType === 'amortized'){
-    if (r === 0){
-      monthlyPayment = price / term;
-    } else {
-      monthlyPayment = (price * r) / (1 - Math.pow(1 + r, -term));
-    }
+    monthlyPayment = r===0 ? price/term : (price * r) / (1 - Math.pow(1 + r, -term));
     totalInterest = 0;
     remaining = price;
     for (let i=1;i<=term;i++){
@@ -123,11 +124,6 @@ calcBtn.addEventListener('click', () => {
       totalInterest += interest;
     }
 
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-
   } else if (interestType === 'fixed'){
     const interestAmt = price * r;
     const monthlyPrincipal = price / term;
@@ -136,12 +132,8 @@ calcBtn.addEventListener('click', () => {
     let balRem = price;
     for (let i=1;i<=term;i++){
       balRem = +(balRem - monthlyPrincipal);
-      breakdownTbody.insertAdjacentHTML('beforeend', row(i, +(monthlyPrincipal), +(interestAmt), +(monthlyPayment), balRem>0?balRem:0));
+      breakdownTbody.insertAdjacentHTML('beforeend', row(i, monthlyPrincipal, interestAmt, monthlyPayment, balRem>0?balRem:0));
     }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
 
   } else if (interestType === 'compound'){
     let bal = price;
@@ -155,11 +147,13 @@ calcBtn.addEventListener('click', () => {
       totalInterest += interest;
       bal = endBal;
     }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
   }
+
+  // Show summary card
+  summaryCard.classList.remove('hidden');
+  principalVal.textContent = toPHP(price);
+  totalInterestVal.textContent = toPHP(totalInterest);
+  monthlyVal.textContent = toPHP(monthlyPayment);
 
   showToast('Calculation done');
 });
@@ -172,6 +166,8 @@ clearBtn.addEventListener('click', ()=>{
   customInterestEl.disabled = true;
   breakdownTbody.innerHTML = '';
   summaryCard.classList.add('hidden');
+  computationSummary.classList.add('hidden');
+  computationSummary.innerHTML = '';
   principalVal.textContent = '—';
   totalInterestVal.textContent = '—';
   monthlyVal.textContent = '—';
