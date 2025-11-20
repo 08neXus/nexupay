@@ -1,70 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loan & Interest Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phone Installment Calculator</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <div class="container">
-    <h1>Loan & Interest Calculator</h1>
 
-    <div class="calculator card">
-      <div class="form-group">
-        <label>Loan Amount (PHP)</label>
-        <input type="number" id="loanAmount" placeholder="Enter loan amount">
-      </div>
+<div class="container">
 
-      <div class="form-group">
-        <label>Interest Rate (% per month)</label>
-        <input type="number" id="interestRate" step="0.01" placeholder="Enter interest rate">
-      </div>
+    <h2>📱 Phone Installment Calculator</h2>
 
-      <div class="form-group">
-        <label>Loan Term (months)</label>
-        <input type="number" id="loanTerm" placeholder="Enter loan term in months">
-      </div>
+    <label>Item Price</label>
+    <input type="number" id="price" placeholder="Enter item price">
 
-      <div class="form-group">
-        <label>Interest Type</label>
-        <select id="interestType">
-          <option value="simple">Simple (Monthly Add-on)</option>
-          <option value="amortized">Amortized</option>
-          <option value="compound">Compound</option>
-        </select>
-      </div>
+    <label>Payment Term</label>
+    <select id="term">
+        <option value="3">3 months</option>
+        <option value="6">6 months</option>
+        <option value="9">9 months</option>
+        <option value="12">12 months</option>
+        <option value="24">24 months</option>
+    </select>
 
-      <div class="form-group checkbox-group">
-        <input type="checkbox" id="autoAddOn">
-        <label for="autoAddOn">Automatically apply monthly add-on interest</label>
-      </div>
+    <label>Interest Type</label>
+    <select id="interestType">
+        <option value="simple">Simple Interest (Monthly Add-On)</option>
+        <option value="amortized">Amortized</option>
+    </select>
 
-      <button id="calculateBtn">Calculate</button>
+    <button onclick="calculate()">Calculate</button>
+    <button class="clear-btn" onclick="clearForm()">Clear</button>
+
+    <p id="resultInfo"></p>
+
+    <div class="table-container">
+        <table id="breakdown">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Principal</th>
+                    <th>Interest</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <div class="table-container card">
-      <table id="resultTable">
-        <thead>
-          <tr>
-            <th>Month</th>
-            <th>Principal</th>
-            <th>Interest</th>
-            <th>Total Payment</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+</div>
 
-    <div class="totals card">
-      <p>Total Interest: <span id="totalInterest">0</span> PHP</p>
-      <p>Total Payment: <span id="totalPayment">0</span> PHP</p>
-    </div>
-  </div>
+<div id="toast">Reset successful</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
