@@ -111,6 +111,7 @@ input[type="number"]:focus, select:focus{
   width:100%;
   border-collapse:collapse;
   font-size:12px; /* smaller font */
+  /* min-width removed so table fits screen */
 }
 .table thead th{
   background:#faf6ff;
