@@ -1,92 +1,85 @@
 body {
-    background: #f4f4f4;
-    font-family: "Roboto", sans-serif;
-    margin: 0;
-}
-
-.container {
-    max-width: 420px;
-    background: white;
-    margin: 20px auto;
+    font-family: "Inter", sans-serif;
+    background: #f9f9f9;
     padding: 20px;
-    border-radius: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
 
-h2 {
-    text-align: center;
-    font-weight: 500;
+.card {
+    background: #fff;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    max-width: 420px;
+    margin: auto;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: 700;
     margin-bottom: 15px;
 }
 
 label {
-    font-size: 15px;
-    margin-top: 12px;
+    font-weight: 600;
+    margin-top: 10px;
     display: block;
-}
-
-.custom-interest-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 14px;
 }
 
 input, select {
     width: 100%;
     padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    border: 1px solid #d3d3d3;
     margin-top: 5px;
     font-size: 15px;
+}
+
+.custom-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.custom-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
 }
 
 button {
     width: 100%;
     padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
     border: none;
-    background: #6200ee;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.calc {
+    background: #6200EE;
     color: white;
-    font-size: 16px;
-    border-radius: 12px;
-    margin-top: 18px;
-    cursor: pointer;
 }
 
-.clear-btn {
-    background: #d32f2f;
-}
-
-.table-container {
-    margin-top: 20px;
-    overflow-x: auto;
+.clear {
+    background: #D32F2F;
+    color: white;
 }
 
 table {
     width: 100%;
+    margin-top: 20px;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-thead {
-    background: #6200ee;
-    color: white;
-}
-
 th, td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    padding: 10px 6px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
 }
 
-#toast {
-    position: fixed;
-    bottom: -60px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #323232;
+thead {
+    background: #6200EE;
     color: white;
-    padding: 12px 20px;
-    border-radius: 24px;
-    font-size: 14px;
-    transition: 0.4s;
 }
