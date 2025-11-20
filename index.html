@@ -1,8 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Installment Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
 <div class="card">
-    <h2 class="title">📱 Phone Installment Calculator</h2>
+    <h2>📱 Installment Calculator</h2>
 
     <label>Item Price</label>
-    <input type="number" id="price" placeholder="Enter item price">
+    <input id="price" type="number" placeholder="Enter item price">
 
     <label>Payment Term</label>
     <select id="term">
@@ -12,15 +22,17 @@
         <option value="12">12 months</option>
     </select>
 
-    <div class="custom-row">
+    <div class="checkRow">
         <input type="checkbox" id="customToggle">
-        <input type="number" id="customInterest" placeholder="Enter custom interest %" disabled>
+        <label for="customToggle">Use custom interest rate</label>
     </div>
+
+    <input id="customInterest" type="number" placeholder="Enter custom interest %" disabled>
 
     <label>Interest Type</label>
     <select id="interestType">
         <option value="amortized">Amortized</option>
-        <option value="simple">Simple</option>
+        <option value="simple">Simple (Monthly Add-On)</option>
         <option value="fixed">Fixed</option>
         <option value="compound">Compound</option>
     </select>
@@ -28,15 +40,21 @@
     <button class="calc">Calculate</button>
     <button class="clear">Clear</button>
 
-    <table id="resultTable">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Principal</th>
-                <th>Interest</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="table-container">
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Principal</th>
+                    <th>Interest</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
+
+<script src="script.js"></script>
+</body>
+</html>
