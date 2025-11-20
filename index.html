@@ -20,13 +20,20 @@
     <input type="number" id="price" placeholder="Enter item price">
 
     <label>Payment Term</label>
-    <select id="term">
+    <select id="term" onchange="updateAutoRate()">
         <option value="3">3 months</option>
         <option value="6">6 months</option>
         <option value="9">9 months</option>
         <option value="12">12 months</option>
         <option value="24">24 months</option>
     </select>
+
+    <label class="custom-interest-row">
+        <input type="checkbox" id="customInterestToggle" onchange="toggleCustomInterest()">
+        Use custom interest rate (%)
+    </label>
+
+    <input type="number" id="customInterest" placeholder="Enter custom interest %" disabled>
 
     <label>Interest Type</label>
     <select id="interestType">
