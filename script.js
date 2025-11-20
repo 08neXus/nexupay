@@ -1,117 +1,120 @@
-// Suggested interest per term (monthly add-on/amortized base rate)
-const autoInterestRates = {
-    3: 0.0130,
-    6: 0.0140,
-    9: 0.0150,
-    12: 0.0160,
-    24: 0.0180
+// Suggested monthly interest rates based on payment term
+const suggestedRates = {
+    3: 1.5,
+    6: 1.7,
+    9: 1.8,
+    12: 2.0
 };
 
-let currentRate = autoInterestRates[3];
-
-function updateAutoRate() {
-    const term = document.getElementById("term").value;
-
-    if (!document.getElementById("customInterestToggle").checked) {
-        currentRate = autoInterestRates[term];
-        document.getElementById("customInterest").value = "";
-    }
-}
-
-function toggleCustomInterest() {
-    const manual = document.getElementById("customInterestToggle").checked;
+// Enable/Disable custom interest input
+document.getElementById("customToggle").addEventListener("change", function () {
     const customInput = document.getElementById("customInterest");
+    customInput.disabled = !this.checked;
+});
 
-    if (manual) {
-        customInput.disabled = false;
-    } else {
-        customInput.disabled = true;
-        customInput.value = "";
-        updateAutoRate();
-    }
-}
-
-function calculate() {
-    const priceInput = document.getElementById("price").value;
-    const price = parseFloat(priceInput);
+// Main calculate button
+document.querySelector(".calc").addEventListener("click", function () {
+    const price = parseFloat(document.getElementById("price").value);
     const term = parseInt(document.getElementById("term").value);
     const interestType = document.getElementById("interestType").value;
-    const customInterestEnabled = document.getElementById("customInterestToggle").checked;
-    const customInterestValue = parseFloat(document.getElementById("customInterest").value);
+
+    // Determine interest rate
+    let interestRate;
+
+    if (document.getElementById("customToggle").checked) {
+        interestRate = parseFloat(document.getElementById("customInterest").value);
+        if (isNaN(interestRate) || interestRate <= 0) {
+            alert("Enter a valid custom interest.");
+            return;
+        }
+    } else {
+        interestRate = suggestedRates[term]; // Use system default
+    }
 
     if (!price || price <= 0) {
-        alert("Enter a valid price");
+        alert("Enter a valid item price.");
         return;
     }
 
-    // get correct interest
-    let rate;
-    if (customInterestEnabled) {
-        if (!customInterestValue || customInterestValue <= 0) {
-            alert("Enter a valid custom interest rate");
-            return;
+    generateTable(price, term, interestRate, interestType);
+});
+
+// Clear button
+document.querySelector(".clear").addEventListener("click", function () {
+    document.getElementById("price").value = "";
+    document.getElementById("customInterest").value = "";
+    document.getElementById("resultTable").querySelector("tbody").innerHTML = "";
+});
+
+
+// Generate amortization table depending on interest type
+function generateTable(price, term, interestRate, interestType) {
+    const tbody = document.querySelector("#resultTable tbody");
+    tbody.innerHTML = "";
+
+    let monthlyPrincipal = price / term;
+    let monthlyInterestRate = interestRate / 100;
+
+    if (interestType === "amortized") {
+        // Amortized: (P × r) / (1 − (1+r)^−n)
+        let r = monthlyInterestRate;
+        let n = term;
+
+        let monthlyPayment = (price * r) / (1 - Math.pow(1 + r, -n));
+
+        for (let i = 1; i <= term; i++) {
+            let interest = price * r;
+            let principal = monthlyPayment - interest;
+
+            price -= principal;
+
+            tbody.innerHTML += row(i, principal, interest, monthlyPayment);
         }
-        rate = customInterestValue / 100;
-    } else {
-        rate = autoInterestRates[term];
     }
 
-    currentRate = rate;
+    else if (interestType === "simple") {
+        // Simple: P * r * n / n
+        let totalInterest = price * monthlyInterestRate * term;
+        let interestPerMonth = totalInterest / term;
 
-    const table = document.querySelector("#breakdown tbody");
-    table.innerHTML = "";
-
-    let monthlyPrincipal, monthlyInterest, monthlyTotal;
-    let remainingBalance = price;
-
-    if (interestType === "simple") {
-        let totalInterest = price * rate * term;
-        monthlyTotal = (price + totalInterest) / term;
-        monthlyPrincipal = price / term;
-        monthlyInterest = totalInterest / term;
-
-        document.getElementById("resultInfo").innerText =
-            `Interest applied: ${(rate * 100).toFixed(2)}% | Total Interest: ₱${totalInterest.toFixed(2)}`;
-
-    } else {
-        let monthlyRate = rate;
-        monthlyTotal = (price * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -term));
-
-        document.getElementById("resultInfo").innerText =
-            `Amortized monthly rate: ${(rate * 100).toFixed(2)}%`;
+        for (let i = 1; i <= term; i++) {
+            tbody.innerHTML += row(i, monthlyPrincipal, interestPerMonth, monthlyPrincipal + interestPerMonth);
+        }
     }
 
-    for (let i = 1; i <= term; i++) {
-        if (interestType === "simple") {
-            table.innerHTML += `
-                <tr>
-                    <td>${i}</td>
-                    <td>₱${monthlyPrincipal.toFixed(2)}</td>
-                    <td>₱${monthlyInterest.toFixed(2)}</td>
-                    <td>₱${monthlyTotal.toFixed(2)}</td>
-                </tr>`;
-        } else {
-            let interestPortion = remainingBalance * rate;
-            let principalPortion = monthlyTotal - interestPortion;
-            remainingBalance -= principalPortion;
+    else if (interestType === "fixed") {
+        // Fixed: monthlyInterest = price * rate
+        let fixedInterest = price * monthlyInterestRate;
 
-            table.innerHTML += `
-                <tr>
-                    <td>${i}</td>
-                    <td>₱${principalPortion.toFixed(2)}</td>
-                    <td>₱${interestPortion.toFixed(2)}</td>
-                    <td>₱${monthlyTotal.toFixed(2)}</td>
-                </tr>`;
+        for (let i = 1; i <= term; i++) {
+            tbody.innerHTML += row(i, monthlyPrincipal, fixedInterest, monthlyPrincipal + fixedInterest);
+        }
+    }
+
+    else if (interestType === "compound") {
+        // Compound: P × (1 + r)^n
+        let remaining = price;
+
+        for (let i = 1; i <= term; i++) {
+            let interest = remaining * monthlyInterestRate;
+            let totalPayment = monthlyPrincipal + interest;
+
+            remaining = remaining + interest - monthlyPrincipal;
+
+            tbody.innerHTML += row(i, monthlyPrincipal, interest, totalPayment);
         }
     }
 }
 
-function clearForm() {
-    document.getElementById("price").value = "";
-    document.getElementById("resultInfo").innerText = "";
-    document.querySelector("#breakdown tbody").innerHTML = "";
 
-    const toast = document.getElementById("toast");
-    toast.style.bottom = "30px";
-    setTimeout(() => toast.style.bottom = "-60px", 2000);
+// Helper to format each table row
+function row(i, principal, interest, total) {
+    return `
+        <tr>
+            <td>${i}</td>
+            <td>₱${principal.toFixed(2)}</td>
+            <td>₱${interest.toFixed(2)}</td>
+            <td>₱${total.toFixed(2)}</td>
+        </tr>
+    `;
 }
