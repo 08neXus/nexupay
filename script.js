@@ -29,6 +29,8 @@ function updateAutoRate(){
   }
 }
 termEl.addEventListener('change', updateAutoRate);
+
+// Run once on page load
 updateAutoRate();
 
 /* Toggle custom interest input */
@@ -90,7 +92,6 @@ calcBtn.addEventListener('click', () => {
     for (let i=1;i<=term;i++){
       const endBal = +(price - monthlyPrincipal * i).toFixed(2);
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, price - monthlyPrincipal*(i-1), monthlyInterest, monthlyPrincipal, endBal));
-      totalInterest += 0; // already accounted
     }
 
     // show summary
@@ -100,7 +101,6 @@ calcBtn.addEventListener('click', () => {
     monthlyVal.textContent = toPHP(monthlyPayment);
 
   } else if (interestType === 'amortized'){
-    // standard amortization on reducing balance
     if (r === 0){
       monthlyPayment = price / term;
     } else {
@@ -123,7 +123,6 @@ calcBtn.addEventListener('click', () => {
     monthlyVal.textContent = toPHP(monthlyPayment);
 
   } else if (interestType === 'fixed'){
-    // fixed monthly interest amount based on original price
     const interestAmt = price * r;
     const monthlyPrincipal = price / term;
     monthlyPayment = monthlyPrincipal + interestAmt;
@@ -139,9 +138,8 @@ calcBtn.addEventListener('click', () => {
     monthlyVal.textContent = toPHP(monthlyPayment);
 
   } else if (interestType === 'compound'){
-    // compound monthly (balance grows by interest then principal paid)
     let bal = price;
-    monthlyPayment = price / term; // keep principal equal each month (compound accrues interest)
+    monthlyPayment = price / term;
     totalInterest = 0;
     for (let i=1;i<=term;i++){
       const interest = +(bal * r);
@@ -157,7 +155,6 @@ calcBtn.addEventListener('click', () => {
     monthlyVal.textContent = toPHP(monthlyPayment);
   }
 
-  // show small feedback
   showToast('Calculation done');
 });
 
