@@ -28,7 +28,7 @@ document.querySelector(".calc").addEventListener("click", function () {
             return;
         }
     } else {
-        interestRate = suggestedRates[term]; // Use system default
+        interestRate = suggestedRates[term]; // system default rate
     }
 
     if (!price || price <= 0) {
@@ -53,11 +53,10 @@ function generateTable(price, term, interestRate, interestType) {
     tbody.innerHTML = "";
 
     let monthlyPrincipal = price / term;
-    let monthlyInterestRate = interestRate / 100;
+    let monthlyRate = interestRate / 100;
 
     if (interestType === "amortized") {
-        // Amortized: (P × r) / (1 − (1+r)^−n)
-        let r = monthlyInterestRate;
+        let r = monthlyRate;
         let n = term;
 
         let monthlyPayment = (price * r) / (1 - Math.pow(1 + r, -n));
@@ -73,8 +72,7 @@ function generateTable(price, term, interestRate, interestType) {
     }
 
     else if (interestType === "simple") {
-        // Simple: P * r * n / n
-        let totalInterest = price * monthlyInterestRate * term;
+        let totalInterest = price * monthlyRate * term;
         let interestPerMonth = totalInterest / term;
 
         for (let i = 1; i <= term; i++) {
@@ -83,8 +81,7 @@ function generateTable(price, term, interestRate, interestType) {
     }
 
     else if (interestType === "fixed") {
-        // Fixed: monthlyInterest = price * rate
-        let fixedInterest = price * monthlyInterestRate;
+        let fixedInterest = price * monthlyRate;
 
         for (let i = 1; i <= term; i++) {
             tbody.innerHTML += row(i, monthlyPrincipal, fixedInterest, monthlyPrincipal + fixedInterest);
@@ -92,11 +89,10 @@ function generateTable(price, term, interestRate, interestType) {
     }
 
     else if (interestType === "compound") {
-        // Compound: P × (1 + r)^n
         let remaining = price;
 
         for (let i = 1; i <= term; i++) {
-            let interest = remaining * monthlyInterestRate;
+            let interest = remaining * monthlyRate;
             let totalPayment = monthlyPrincipal + interest;
 
             remaining = remaining + interest - monthlyPrincipal;
