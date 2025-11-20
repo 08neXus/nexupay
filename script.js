@@ -1,7 +1,13 @@
 /* Ultra-clean Material UI calculator logic */
 
-/* Suggested monthly interest (%) by term */
-const suggested = { 3:1.3, 6:1.4, 9:1.5, 12:1.6, 24:1.8 };
+/* Suggested monthly interest (%) by term (Fixed Monthly Add-On Rate) */
+const suggested = {
+  3: 1.5,
+  6: 2.0,
+  9: 2.5,
+  12: 3.0,
+  24: 4.0
+};
 
 /* Elements */
 const priceEl = document.getElementById('price');
