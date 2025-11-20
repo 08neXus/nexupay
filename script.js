@@ -1,64 +1,79 @@
-const loanAmountInput = document.getElementById('loanAmount');
-const interestRateInput = document.getElementById('interestRate');
-const loanTermInput = document.getElementById('loanTerm');
-const interestTypeSelect = document.getElementById('interestType');
-const autoAddOnCheckbox = document.getElementById('autoAddOn');
-const calculateBtn = document.getElementById('calculateBtn');
-const resultTableBody = document.querySelector('#resultTable tbody');
-const totalInterestEl = document.getElementById('totalInterest');
-const totalPaymentEl = document.getElementById('totalPayment');
+const interestRates = {
+    3: 0.0130,
+    6: 0.0130,
+    9: 0.0130,
+    12: 0.0130,
+    24: 0.0130
+};
 
-calculateBtn.addEventListener('click', () => {
-  const principal = parseFloat(loanAmountInput.value);
-  const rate = parseFloat(interestRateInput.value) / 100;
-  const months = parseInt(loanTermInput.value);
-  const type = interestTypeSelect.value;
-  const autoAddOn = autoAddOnCheckbox.checked;
+function calculate() {
+    const price = parseFloat(document.getElementById("price").value);
+    const term = parseInt(document.getElementById("term").value);
+    const type = document.getElementById("interestType").value;
 
-  if (!principal || !rate || !months) return alert('Please fill all fields correctly.');
-
-  let balance = principal;
-  let totalInterest = 0;
-  let tableHTML = '';
-
-  for (let m = 1; m <= months; m++) {
-    let interest = 0;
-    let payment = 0;
-
-    if (type === 'simple') {
-      interest = principal * rate;
-      payment = (principal / months) + interest;
-    } else if (type === 'amortized') {
-      const monthlyRate = rate;
-      payment = (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
-      interest = balance * monthlyRate;
-    } else if (type === 'compound') {
-      interest = balance * rate;
-      payment = (principal / months) + interest;
+    if (!price || price <= 0) {
+        alert("Enter a valid price");
+        return;
     }
 
-    if (autoAddOn) {
-      interest = principal * rate;
-      payment = (principal / months) + interest;
+    const rate = interestRates[term];
+    const table = document.querySelector("#breakdown tbody");
+    table.innerHTML = "";
+
+    let monthlyPrincipal, monthlyInterest, monthlyTotal;
+
+    if (type === "simple") {
+        let totalInterest = price * rate * term;
+        let totalPayable = price + totalInterest;
+
+        monthlyTotal = totalPayable / term;
+        monthlyPrincipal = price / term;
+        monthlyInterest = totalInterest / term;
+
+        document.getElementById("resultInfo").innerText =
+            `Monthly Interest: ${(rate * 100).toFixed(2)}% | Total Interest: ₱${totalInterest.toFixed(2)}`;
+
+    } else {
+        let monthlyRate = rate;
+        monthlyTotal = (price * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -term));
+
+        document.getElementById("resultInfo").innerText =
+            `Amortized monthly rate: ${(rate * 100).toFixed(2)}%`;
     }
 
-    balance -= (payment - interest);
-    if (balance < 0) balance = 0;
+    for (let i = 1; i <= term; i++) {
+        if (type === "simple") {
+            let row = `
+                <tr>
+                    <td>${i}</td>
+                    <td>₱${monthlyPrincipal.toFixed(2)}</td>
+                    <td>₱${monthlyInterest.toFixed(2)}</td>
+                    <td>₱${monthlyTotal.toFixed(2)}</td>
+                </tr>`;
+            table.innerHTML += row;
+        } else {
+            let interestPortion = price * rate;
+            let principalPortion = monthlyTotal - interestPortion;
+            price -= principalPortion;
 
-    totalInterest += interest;
+            let row = `
+                <tr>
+                    <td>${i}</td>
+                    <td>₱${principalPortion.toFixed(2)}</td>
+                    <td>₱${interestPortion.toFixed(2)}</td>
+                    <td>₱${monthlyTotal.toFixed(2)}</td>
+                </tr>`;
+            table.innerHTML += row;
+        }
+    }
+}
 
-    tableHTML += `
-      <tr>
-        <td>${m}</td>
-        <td>${(payment - interest).toFixed(2)}</td>
-        <td>${interest.toFixed(2)}</td>
-        <td>${payment.toFixed(2)}</td>
-        <td>${balance.toFixed(2)}</td>
-      </tr>
-    `;
-  }
+function clearForm() {
+    document.getElementById("price").value = "";
+    document.getElementById("resultInfo").innerText = "";
+    document.querySelector("#breakdown tbody").innerHTML = "";
 
-  resultTableBody.innerHTML = tableHTML;
-  totalInterestEl.textContent = totalInterest.toFixed(2);
-  totalPaymentEl.textContent = (principal + totalInterest).toFixed(2);
-});
+    let toast = document.getElementById("toast");
+    toast.style.bottom = "30px";
+    setTimeout(() => { toast.style.bottom = "-60px"; }, 2000);
+}
