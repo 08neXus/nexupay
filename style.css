@@ -100,24 +100,30 @@ input[type="number"]:focus, select:focus{
 /* Table wrapper responsive */
 .table-wrapper{
   margin-top:16px;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
+  overflow-x:hidden; /* prevent horizontal scroll */
   border-radius:10px;
   background:linear-gradient(180deg,#fff,#fbfbff);
-  padding:6px;
+  padding:4px; /* smaller padding */
 }
 
-/* Table style (short labels fit mobile) */
+/* Table style (fit all screen) */
 .table{
   width:100%;
   border-collapse:collapse;
-  min-width:520px; /* allow horizontal scroll if needed */
-  font-size:14px;
+  font-size:12px; /* smaller font */
 }
 .table thead th{
-  position:sticky;top:0;z-index:5;background:#faf6ff;padding:10px;border-bottom:1px solid #efe7fb;text-align:center;font-weight:700
+  background:#faf6ff;
+  padding:6px; /* smaller padding */
+  border-bottom:1px solid #efe7fb;
+  text-align:center;
+  font-weight:700;
 }
-.table tbody td{padding:10px;text-align:center;border-bottom:1px solid #f2eef8}
+.table tbody td{
+  padding:6px; /* smaller padding */
+  text-align:center;
+  border-bottom:1px solid #f2eef8;
+}
 .table tbody tr:nth-child(even){background:#fbf8ff}
 .table tbody tr:hover{background:#f3eefc;transition:0.12s}
 
@@ -134,6 +140,7 @@ input[type="number"]:focus, select:focus{
 @media (max-width:420px){
   .brand-icon{width:46px;height:46px}
   .card{padding:14px}
-  .table{min-width:480px;font-size:13px}
+  .table{font-size:11px} /* smaller font on tiny screens */
+  .table thead th, .table tbody td{padding:4px}
   input[type="number"], select{padding:11px}
 }
