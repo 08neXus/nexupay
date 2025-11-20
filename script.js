@@ -1,187 +1,119 @@
-/* Ultra-clean Material UI calculator logic */
+const suggestedInterest = {
+    3: 1.0,
+    6: 1.3,
+    9: 1.5,
+    12: 1.7,
+    24: 2.1
+};
 
-/* Suggested monthly interest (%) by term */
-const suggested = { 3:1.3, 6:1.4, 9:1.5, 12:1.6, 24:1.8 };
-
-/* Elements */
-const priceEl = document.getElementById('price');
-const termEl = document.getElementById('term');
-const interestTypeEl = document.getElementById('interestType');
-const customToggleEl = document.getElementById('customToggle');
-const customInterestEl = document.getElementById('customInterest');
-const calcBtn = document.getElementById('calcBtn');
-const clearBtn = document.getElementById('clearBtn');
-const breakdownTbody = document.querySelector('#breakdown tbody');
-const toast = document.getElementById('toast');
-const summaryCard = document.getElementById('summaryCard');
-const principalVal = document.getElementById('principalVal');
-const totalInterestVal = document.getElementById('totalInterestVal');
-const monthlyVal = document.getElementById('monthlyVal');
-
-/* Initialize custom interest disabled */
-customInterestEl.disabled = true;
-
-/* Auto apply suggested rate when term changes unless custom toggled */
-function updateAutoRate(){
-  if (!customToggleEl.checked){
-    const t = parseInt(termEl.value,10);
-    customInterestEl.value = suggested[t] !== undefined ? suggested[t].toFixed(2) : '';
-  }
-}
-termEl.addEventListener('change', updateAutoRate);
-updateAutoRate();
-
-/* Toggle custom interest input */
-customToggleEl.addEventListener('change', () => {
-  customInterestEl.disabled = !customToggleEl.checked;
-  if (!customToggleEl.checked) updateAutoRate();
-  else customInterestEl.focus();
+document.getElementById("useCustom").addEventListener("change", function() {
+    const customInput = document.getElementById("customInterest");
+    customInput.disabled = !this.checked;
 });
 
-/* Show toast helper */
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=> toast.classList.remove('show'), 2400);
+function calculate() {
+    let price = parseFloat(document.getElementById("price").value);
+    let term = parseInt(document.getElementById("term").value);
+
+    let interestType = document.getElementById("interestType").value;
+    let useCustom = document.getElementById("useCustom").checked;
+
+    let interestRate = useCustom
+        ? parseFloat(document.getElementById("customInterest").value)
+        : suggestedInterest[term];
+
+    if (!price || interestRate === "" || term === "") {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    let resultDiv = document.getElementById("result");
+    let tableDiv = document.getElementById("tableContainer");
+
+    let rows = "";
+    let totalInterest = 0;
+    let monthlyPayment = 0;
+
+    // SIMPLE INTEREST (Monthly Add-On)
+    if (interestType === "simple") {
+        let interest = price * (interestRate / 100) * term;
+        let totalAmount = price + interest;
+        monthlyPayment = totalAmount / term;
+
+        resultDiv.innerHTML = `
+            <h2>Results</h2>
+            Total Loan Payment: ₱${totalAmount.toFixed(2)}<br>
+            Total Interest: ₱${interest.toFixed(2)}
+        `;
+
+        let remaining = totalAmount;
+
+        for (let m = 1; m <= term; m++) {
+            let monthlyInterest = (price * (interestRate / 100));
+            let principal = monthlyPayment - monthlyInterest;
+            remaining -= monthlyPayment;
+
+            rows += `
+                <tr>
+                    <td>${m}</td>
+                    <td>${monthlyPayment.toFixed(2)}</td>
+                    <td>${monthlyInterest.toFixed(2)}</td>
+                    <td>${principal.toFixed(2)}</td>
+                    <td>${remaining <= 0 ? "0.00" : remaining.toFixed(2)}</td>
+                </tr>
+            `;
+        }
+    }
+
+    // AMORTIZED
+    else {
+        let r = interestRate / 100;
+        monthlyPayment = (price * r) / (1 - Math.pow(1 + r, -term));
+
+        resultDiv.innerHTML = `
+            <h2>Results</h2>
+            Monthly Payment: ₱${monthlyPayment.toFixed(2)}
+        `;
+
+        let balance = price;
+
+        for (let m = 1; m <= term; m++) {
+            let interestPayment = balance * r;
+            let principal = monthlyPayment - interestPayment;
+            balance -= principal;
+
+            rows += `
+                <tr>
+                    <td>${m}</td>
+                    <td>${monthlyPayment.toFixed(2)}</td>
+                    <td>${interestPayment.toFixed(2)}</td>
+                    <td>${principal.toFixed(2)}</td>
+                    <td>${balance <= 0 ? "0.00" : balance.toFixed(2)}</td>
+                </tr>
+            `;
+        }
+    }
+
+    tableDiv.innerHTML = `
+        <h2>Payment Breakdown</h2>
+        <table>
+            <tr>
+                <th>Month</th>
+                <th>Monthly Payment</th>
+                <th>Interest</th>
+                <th>Principal</th>
+                <th>Balance</th>
+            </tr>
+            ${rows}
+        </table>
+    `;
 }
 
-/* Format PHP currency */
-function toPHP(n){
-  return Number(n).toLocaleString('en-PH', { style:'currency', currency:'PHP', maximumFractionDigits:2 });
-}
-
-/* Calculate flow */
-calcBtn.addEventListener('click', () => {
-  const price = parseFloat(priceEl.value);
-  const term = parseInt(termEl.value,10);
-  const interestType = interestTypeEl.value;
-  let ratePct;
-
-  if (customToggleEl.checked){
-    ratePct = parseFloat(customInterestEl.value);
-    if (isNaN(ratePct) || ratePct <= 0){
-      alert('Enter a valid custom interest %');
-      return;
-    }
-  } else {
-    ratePct = suggested[term] ?? suggested[6];
-  }
-
-  if (!price || price <= 0){
-    alert('Enter a valid item price');
-    return;
-  }
-
-  const r = ratePct / 100; // monthly decimal
-  breakdownTbody.innerHTML = '';
-
-  let monthlyPayment = 0;
-  let totalInterest = 0;
-  let remaining = price;
-
-  if (interestType === 'simple'){ // monthly add-on (simple)
-    totalInterest = price * r * term;
-    const totalPayable = price + totalInterest;
-    monthlyPayment = totalPayable / term;
-
-    const monthlyPrincipal = price / term;
-    const monthlyInterest = totalInterest / term;
-
-    for (let i=1;i<=term;i++){
-      const endBal = +(price - monthlyPrincipal * i).toFixed(2);
-      breakdownTbody.insertAdjacentHTML('beforeend', row(i, price - monthlyPrincipal*(i-1), monthlyInterest, monthlyPrincipal, endBal));
-      totalInterest += 0; // already accounted
-    }
-
-    // show summary
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-
-  } else if (interestType === 'amortized'){
-    // standard amortization on reducing balance
-    if (r === 0){
-      monthlyPayment = price / term;
-    } else {
-      monthlyPayment = (price * r) / (1 - Math.pow(1 + r, -term));
-    }
-    totalInterest = 0;
-    remaining = price;
-    for (let i=1;i<=term;i++){
-      const interest = +(remaining * r);
-      const principal = +(monthlyPayment - interest);
-      const endBal = +(remaining - principal);
-      breakdownTbody.insertAdjacentHTML('beforeend', row(i, remaining, interest, principal, endBal>0?endBal:0));
-      remaining = endBal;
-      totalInterest += interest;
-    }
-
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-
-  } else if (interestType === 'fixed'){
-    // fixed monthly interest amount based on original price
-    const interestAmt = price * r;
-    const monthlyPrincipal = price / term;
-    monthlyPayment = monthlyPrincipal + interestAmt;
-    totalInterest = interestAmt * term;
-    let balRem = price;
-    for (let i=1;i<=term;i++){
-      balRem = +(balRem - monthlyPrincipal);
-      breakdownTbody.insertAdjacentHTML('beforeend', row(i, +(monthlyPrincipal), +(interestAmt), +(monthlyPayment), balRem>0?balRem:0));
-    }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-
-  } else if (interestType === 'compound'){
-    // compound monthly (balance grows by interest then principal paid)
-    let bal = price;
-    monthlyPayment = price / term; // keep principal equal each month (compound accrues interest)
-    totalInterest = 0;
-    for (let i=1;i<=term;i++){
-      const interest = +(bal * r);
-      const principal = monthlyPayment;
-      const endBal = +(bal + interest - principal);
-      breakdownTbody.insertAdjacentHTML('beforeend', row(i, bal, interest, principal, endBal>0?endBal:0));
-      totalInterest += interest;
-      bal = endBal;
-    }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-  }
-
-  // show small feedback
-  showToast('Calculation done');
-});
-
-/* Clear */
-clearBtn.addEventListener('click', ()=>{
-  priceEl.value = '';
-  customToggleEl.checked = false;
-  customInterestEl.value = '';
-  customInterestEl.disabled = true;
-  breakdownTbody.innerHTML = '';
-  summaryCard.classList.add('hidden');
-  principalVal.textContent = '—';
-  totalInterestVal.textContent = '—';
-  monthlyVal.textContent = '—';
-  showToast('Cleared');
-});
-
-/* helper - build row html */
-function row(i, begBal, interestAmt, principalAmt, endBal){
-  return `<tr>
-    <td>${i}</td>
-    <td>${toPHP(begBal)}</td>
-    <td>${toPHP(interestAmt)}</td>
-    <td>${toPHP(principalAmt)}</td>
-    <td>${toPHP(endBal)}</td>
-  </tr>`;
+function resetForm() {
+    document.getElementById("price").value = "";
+    document.getElementById("customInterest").value = "";
+    document.getElementById("useCustom").checked = false;
+    document.getElementById("customInterest").disabled = true;
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("tableContainer").innerHTML = "";
 }
