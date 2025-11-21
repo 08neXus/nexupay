@@ -21,6 +21,12 @@
       </div>
     </header>
 
+    <!-- Optional preview (uses uploaded file path) -->
+    <!-- Your environment/tooling should transform /mnt/data/... into a served URL -->
+    <div style="text-align:center;margin-bottom:12px;">
+      <img src="/mnt/data/A_digital_screenshot_of_an_Installment_Calculator_.png" alt="screenshot preview" style="max-width:280px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08)">
+    </div>
+
     <section class="card">
       <div class="row">
         <label class="label">Item Price (₱)</label>
@@ -93,11 +99,11 @@
         </button>
       </div>
 
-      <!-- POPUP MODAL -->
-      <div id="matrixModal" class="popup-overlay">
-        <div class="popup">
-          <h3>Monthly Add-On Interest Matrix</h3>
-          <table class="matrix-table">
+      <!-- POPUP MODAL (liquid glass) -->
+      <div id="matrixModal" class="popup-overlay" aria-hidden="true">
+        <div class="popup" role="dialog" aria-modal="true" aria-labelledby="matrixTitle">
+          <h3 id="matrixTitle">Monthly Add-On Interest Matrix</h3>
+          <table class="matrix-table" role="table">
             <thead>
               <tr>
                 <th>Term (Months)</th>
@@ -116,7 +122,7 @@
         </div>
       </div>
 
-      <!-- SUMMARY -->
+      <!-- SUMMARY (three boxes) -->
       <div class="row summary-row hidden" id="summaryCard" aria-live="polite">
         <div class="summary-item">
           <div class="s-label">Principal</div>
@@ -129,6 +135,14 @@
         <div class="summary-item">
           <div class="s-label">Monthly</div>
           <div class="s-value" id="monthlyVal">—</div>
+        </div>
+      </div>
+
+      <!-- B3: Single centered card under the summary -->
+      <div id="totalAfterRow" class="row total-card hidden" aria-live="polite">
+        <div class="total-card-inner">
+          <div class="s-label">Total Amount Payable</div>
+          <div class="s-value" id="totalAfterVal">—</div>
         </div>
       </div>
 
