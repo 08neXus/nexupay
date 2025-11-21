@@ -39,6 +39,7 @@ h2 {
     font-size: 15px;
 }
 
+/* BUTTONS */
 .button-row {
     display: flex;
     gap: 12px;
@@ -70,17 +71,21 @@ button.clear {
     font-weight: 600;
 }
 
-/* ✅ NEW CUSTOM INTEREST SECTION */
-.custom-interest-row {
+/* ✅ FIXED CUSTOM INTEREST SECTION */
+.custom-interest-wrapper {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
+    margin-top: -4px;
+    margin-bottom: 12px;
 }
 
-.custom-checkbox-container {
+.custom-interest-left {
     display: flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
 }
 
 .custom-interest-label {
@@ -88,7 +93,14 @@ button.clear {
     line-height: 1.1;
 }
 
-/* Popup */
+.custom-interest-input {
+    width: 90px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+/* POPUP */
 .popup {
     position: fixed;
     inset: 0;
@@ -114,4 +126,22 @@ button.clear {
 .matrix-table th,
 .matrix-table td {
     padding: 6px;
+}
+
+/* RESULTS TABLE */
+#resultTable {
+    width: 100%;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+#resultTable th {
+    background: #e8e8e8;
+    font-weight: 600;
+}
+
+#resultTable td, #resultTable th {
+    padding: 6px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
