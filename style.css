@@ -45,6 +45,26 @@ input,select{
 .two-col{display:flex;gap:12px;flex-wrap:wrap}
 .col{flex:1;min-width:140px}
 
+/* Custom interest row */
+.custom-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.custom-row .col{flex:1}
+.checkbox-label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.custom-row input[type="checkbox"]{
+  width:18px;
+  height:18px;
+}
+
 /* Buttons */
 .btn-row{display:flex;gap:10px;margin-top:12px}
 .btn{
