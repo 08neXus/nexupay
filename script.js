@@ -1,7 +1,9 @@
+// Enable/Disable custom rate
 document.getElementById("useCustomInterest").addEventListener("change", function () {
     document.getElementById("customInterestRate").disabled = !this.checked;
 });
 
+// Popup Logic
 document.getElementById("matrixBtn").onclick = () => {
     document.getElementById("matrixPopup").style.display = "flex";
 };
@@ -10,15 +12,18 @@ document.getElementById("closeMatrix").onclick = () => {
     document.getElementById("matrixPopup").style.display = "none";
 };
 
+// Buttons
 document.getElementById("calculateBtn").addEventListener("click", calculate);
 document.getElementById("clearBtn").addEventListener("click", () => location.reload());
 
+// Calculator
 function calculate() {
     let loan = parseFloat(document.getElementById("loanAmount").value);
     let down = parseFloat(document.getElementById("downPayment").value) || 0;
     let net = loan - down;
 
     let term = parseInt(document.getElementById("paymentTerm").value);
+
     let useCustom = document.getElementById("useCustomInterest").checked;
     let customRate = parseFloat(document.getElementById("customInterestRate").value);
 
@@ -30,7 +35,7 @@ function calculate() {
         24: 0.04
     };
 
-    let rate = useCustom ? customRate / 100 : addOnRates[term];
+    let rate = useCustom ? (customRate / 100) : addOnRates[term];
 
     let totalInterest = net * rate * term;
     let total = net + totalInterest;
