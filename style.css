@@ -40,6 +40,11 @@ input,select{
   font-size:15px;
 }
 
+/* Rows layout */
+.row{margin-bottom:12px}
+.two-col{display:flex;gap:12px;flex-wrap:wrap}
+.col{flex:1;min-width:140px}
+
 /* Buttons */
 .btn-row{display:flex;gap:10px;margin-top:12px}
 .btn{
