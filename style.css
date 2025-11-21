@@ -85,15 +85,16 @@ input,select{
   text-align:center;
 }
 
-/* MATRIX TABLE */
+/* MATRIX TABLE inside modal */
 .matrix-table{
   width:100%;
   border-collapse:collapse;
   margin-top:12px;
+  font-size:14px;
 }
 .matrix-table th{
-  padding:10px;
   background:#f3eefc;
+  padding:10px;
   border-bottom:1px solid #e6ddfa;
 }
 .matrix-table td{
@@ -116,7 +117,7 @@ input,select{
 .s-value{font-size:15px;font-weight:700}
 
 /* Table */
-.table-wrapper{margin-top:16px;padding:6px;background:#fff;border-radius:12px}
+.table-wrapper{margin-top:16px;padding:6px;background:#fff;border-radius:12px;overflow-x:auto;}
 .table{width:100%;border-collapse:collapse;font-size:13px}
 .table th{
   background:#faf6ff;
