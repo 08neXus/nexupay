@@ -45,15 +45,6 @@ input,select{
 .two-col{display:flex;gap:12px;flex-wrap:wrap}
 .col{flex:1;min-width:140px}
 
-/* Checkbox label */
-.checkbox-label{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  cursor:pointer;
-  white-space:nowrap;
-}
-
 /* Buttons */
 .btn-row{display:flex;gap:10px;margin-top:12px}
 .btn{
@@ -77,27 +68,6 @@ input,select{
   display:flex;
 }
 .matrix-btn-row .btn{flex:1}
-
-/* MODAL */
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:999;
-}
-.modal{
-  background:#fff;
-  padding:20px;
-  border-radius:16px;
-  width:100%;
-  max-width:360px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.15);
-  text-align:center;
-}
 
 /* MATRIX TABLE inside modal */
 .matrix-table{
@@ -154,6 +124,44 @@ input,select{
 
 /* Footer */
 .footer{text-align:right;margin-top:20px;font-size:13px;color:var(--muted)}
+
+/* Liquid Glass Popup */
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition: opacity 0.3s ease-in-out;
+}
+.popup-overlay.active{
+  opacity:1;
+  pointer-events:auto;
+}
+.popup{
+  width:92%;
+  max-width:380px;
+  padding:24px;
+  border-radius:24px;
+  background: rgba(255,255,255,0.25);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+
+  transform: scale(0.88) translateY(20px);
+  opacity:0;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1.25, 0.32, 1),
+    opacity 0.35s ease;
+}
+.popup-overlay.active .popup{
+  transform: scale(1) translateY(0);
+  opacity:1;
+}
 
 /* Small screen adjustments */
 @media (max-width:420px){
