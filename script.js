@@ -7,6 +7,10 @@ const termEl = document.getElementById('term');
 const interestTypeEl = document.getElementById('interestType');
 const customToggleEl = document.getElementById('customToggle');
 const customInterestEl = document.getElementById('customInterest');
+
+const downToggleEl = document.getElementById('downToggle');
+const downPaymentEl = document.getElementById('downPayment');
+
 const calcBtn = document.getElementById('calcBtn');
 const clearBtn = document.getElementById('clearBtn');
 const breakdownTbody = document.querySelector('#breakdown tbody');
@@ -21,10 +25,11 @@ const matrixBtn = document.getElementById('matrixBtn');
 const matrixModal = document.getElementById('matrixModal');
 const closeMatrix = document.getElementById('closeMatrix');
 
-/* Initialize custom interest disabled */
+/* Initialize inputs */
 customInterestEl.disabled = true;
+downPaymentEl.disabled = true;
 
-/* Auto apply suggested rate when term changes unless custom toggled */
+/* Auto apply suggested rate */
 function updateAutoRate(){
   if (!customToggleEl.checked){
     const t = parseInt(termEl.value,10);
@@ -38,7 +43,12 @@ updateAutoRate();
 customToggleEl.addEventListener('change', () => {
   customInterestEl.disabled = !customToggleEl.checked;
   if (!customToggleEl.checked) updateAutoRate();
-  else customInterestEl.focus();
+});
+
+/* Toggle downpayment input */
+downToggleEl.addEventListener('change', () => {
+  downPaymentEl.disabled = !downToggleEl.checked;
+  if (!downToggleEl.checked) downPaymentEl.value = '';
 });
 
 /* Toast helper */
@@ -48,18 +58,38 @@ function showToast(msg){
   setTimeout(()=> toast.classList.remove('show'), 2400);
 }
 
-/* Format PHP currency */
+/* Format PHP */
 function toPHP(n){
   return Number(n).toLocaleString('en-PH', { style:'currency', currency:'PHP', maximumFractionDigits:2 });
 }
 
 /* Calculate button */
 calcBtn.addEventListener('click', () => {
-  const price = parseFloat(priceEl.value);
+  let price = parseFloat(priceEl.value);
   const term = parseInt(termEl.value,10);
   const interestType = interestTypeEl.value;
-  let ratePct;
 
+  if (!price || price <= 0){
+    alert('Enter a valid item price');
+    return;
+  }
+
+  /* DOWNPAYMENT DEDUCTION */
+  let downAmt = 0;
+  if (downToggleEl.checked){
+    downAmt = parseFloat(downPaymentEl.value);
+    if (isNaN(downAmt) || downAmt < 0){
+      alert('Enter a valid downpayment');
+      return;
+    }
+    if (downAmt >= price){
+      alert('Downpayment must be less than item price');
+      return;
+    }
+    price = price - downAmt; // principal reduced
+  }
+
+  let ratePct;
   if (customToggleEl.checked){
     ratePct = parseFloat(customInterestEl.value);
     if (isNaN(ratePct) || ratePct <= 0){
@@ -70,19 +100,13 @@ calcBtn.addEventListener('click', () => {
     ratePct = suggested[term] ?? suggested[6];
   }
 
-  if (!price || price <= 0){
-    alert('Enter a valid item price');
-    return;
-  }
-
-  const r = ratePct / 100; // monthly decimal
+  const r = ratePct / 100;
   breakdownTbody.innerHTML = '';
-
   let monthlyPayment = 0;
   let totalInterest = 0;
-  let remaining = price;
 
-  if (interestType === 'simple'){ // monthly add-on
+  /* SIMPLE ADD-ON */
+  if (interestType === 'simple'){
     totalInterest = price * r * term;
     monthlyPayment = (price + totalInterest)/term;
     const monthlyPrincipal = price/term;
@@ -93,60 +117,56 @@ calcBtn.addEventListener('click', () => {
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, price - monthlyPrincipal*(i-1), monthlyInterest, monthlyPrincipal, endBal));
     }
 
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
-
+  /* AMORTIZED */
   } else if(interestType === 'amortized'){
     monthlyPayment = r===0? price/term : (price*r)/(1-Math.pow(1+r,-term));
-    totalInterest = 0;
-    remaining = price;
+    let remaining = price;
+
     for(let i=1;i<=term;i++){
-      const interest = +(remaining*r);
-      const principal = +(monthlyPayment-interest);
-      const endBal = +(remaining-principal);
+      const interest = remaining*r;
+      const principal = monthlyPayment - interest;
+      const endBal = remaining - principal;
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, remaining, interest, principal, endBal>0?endBal:0));
       remaining = endBal;
       totalInterest += interest;
     }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
 
+  /* FIXED */
   } else if(interestType === 'fixed'){
     const interestAmt = price*r;
     const monthlyPrincipal = price/term;
     monthlyPayment = monthlyPrincipal + interestAmt;
-    totalInterest = interestAmt*term;
+    totalInterest = interestAmt * term;
+
     let balRem = price;
     for(let i=1;i<=term;i++){
-      balRem = +(balRem - monthlyPrincipal);
+      balRem -= monthlyPrincipal;
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, monthlyPrincipal, interestAmt, monthlyPayment, balRem>0?balRem:0));
     }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
 
+  /* COMPOUND */
   } else if(interestType === 'compound'){
     let bal = price;
     monthlyPayment = price/term;
-    totalInterest = 0;
+
     for(let i=1;i<=term;i++){
-      const interest = +(bal*r);
+      const interest = bal*r;
       const principal = monthlyPayment;
-      const endBal = +(bal + interest - principal);
+      const endBal = bal + interest - principal;
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, bal, interest, principal, endBal>0?endBal:0));
       totalInterest += interest;
       bal = endBal;
     }
-    summaryCard.classList.remove('hidden');
-    principalVal.textContent = toPHP(price);
-    totalInterestVal.textContent = toPHP(totalInterest);
-    monthlyVal.textContent = toPHP(monthlyPayment);
   }
+
+  /* SUMMARY */
+  summaryCard.classList.remove('hidden');
+  principalVal.textContent = downToggleEl.checked
+    ? `${toPHP(price)} (after downpayment)`
+    : toPHP(price);
+
+  totalInterestVal.textContent = toPHP(totalInterest);
+  monthlyVal.textContent = toPHP(monthlyPayment);
 
   showToast('Calculation done');
 });
@@ -154,9 +174,14 @@ calcBtn.addEventListener('click', () => {
 /* Clear button */
 clearBtn.addEventListener('click', ()=>{
   priceEl.value='';
+  downToggleEl.checked=false;
+  downPaymentEl.value='';
+  downPaymentEl.disabled=true;
+
   customToggleEl.checked=false;
   customInterestEl.value='';
   customInterestEl.disabled=true;
+
   breakdownTbody.innerHTML='';
   summaryCard.classList.add('hidden');
   principalVal.textContent='—';
