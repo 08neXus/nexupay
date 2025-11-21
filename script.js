@@ -25,6 +25,7 @@ const closeMatrix = document.getElementById('closeMatrix');
 customInterestEl.disabled = true;
 downPaymentEl.disabled = true;
 
+/* Auto interest rate */
 function updateAutoRate(){
   if (!customToggleEl.checked){
     const t = parseInt(termEl.value,10);
@@ -34,26 +35,42 @@ function updateAutoRate(){
 termEl.addEventListener('change', updateAutoRate);
 updateAutoRate();
 
+/* Toggle custom interest */
 customToggleEl.addEventListener('change', () => {
   customInterestEl.disabled = !customToggleEl.checked;
   if (!customToggleEl.checked) updateAutoRate();
 });
 
+/* Toggle downpayment */
 downToggleEl.addEventListener('change', () => {
   downPaymentEl.disabled = !downToggleEl.checked;
   if (!downToggleEl.checked) downPaymentEl.value = '';
 });
 
+/* Toast helper */
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add('show');
   setTimeout(()=> toast.classList.remove('show'), 2400);
 }
 
+/* Format PHP */
 function toPHP(n){
   return Number(n).toLocaleString('en-PH', { style:'currency', currency:'PHP', maximumFractionDigits:2 });
 }
 
+/* Build table row */
+function row(i,begBal,interestAmt,principalAmt,endBal){
+  return `<tr>
+    <td>${i}</td>
+    <td>${toPHP(begBal)}</td>
+    <td>${toPHP(interestAmt)}</td>
+    <td>${toPHP(principalAmt)}</td>
+    <td>${toPHP(endBal)}</td>
+  </tr>`;
+}
+
+/* Calculate button */
 calcBtn.addEventListener('click', () => {
   let price = parseFloat(priceEl.value);
   const term = parseInt(termEl.value,10);
@@ -146,6 +163,7 @@ calcBtn.addEventListener('click', () => {
   showToast('Calculation done');
 });
 
+/* Clear button */
 clearBtn.addEventListener('click', ()=>{
   priceEl.value='';
   downToggleEl.checked=false;
@@ -160,4 +178,11 @@ clearBtn.addEventListener('click', ()=>{
   summaryCard.classList.add('hidden');
   principalVal.textContent='—';
   totalInterestVal.textContent='—';
-  monthlyVal.textContent
+  monthlyVal.textContent='—';
+
+  showToast('Cleared');
+});
+
+/* MATRIX MODAL */
+matrixBtn.addEventListener('click', ()=>{ matrixModal.classList.add('active'); });
+closeMatrix.addEventListener('click', ()=>{ matrixModal.classList.remove('active'); });
