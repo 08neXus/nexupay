@@ -1,7 +1,5 @@
-/* Suggested monthly interest (%) by term for Simple Add-On */
 const suggested = { 3:1.5, 6:2, 9:2.5, 12:3, 24:4 };
 
-/* Elements */
 const priceEl = document.getElementById('price');
 const termEl = document.getElementById('term');
 const interestTypeEl = document.getElementById('interestType');
@@ -20,16 +18,13 @@ const principalVal = document.getElementById('principalVal');
 const totalInterestVal = document.getElementById('totalInterestVal');
 const monthlyVal = document.getElementById('monthlyVal');
 
-/* Matrix modal elements */
 const matrixBtn = document.getElementById('matrixBtn');
 const matrixModal = document.getElementById('matrixModal');
 const closeMatrix = document.getElementById('closeMatrix');
 
-/* Initialize inputs */
 customInterestEl.disabled = true;
 downPaymentEl.disabled = true;
 
-/* Auto apply suggested rate */
 function updateAutoRate(){
   if (!customToggleEl.checked){
     const t = parseInt(termEl.value,10);
@@ -39,31 +34,26 @@ function updateAutoRate(){
 termEl.addEventListener('change', updateAutoRate);
 updateAutoRate();
 
-/* Toggle custom interest input */
 customToggleEl.addEventListener('change', () => {
   customInterestEl.disabled = !customToggleEl.checked;
   if (!customToggleEl.checked) updateAutoRate();
 });
 
-/* Toggle downpayment input */
 downToggleEl.addEventListener('change', () => {
   downPaymentEl.disabled = !downToggleEl.checked;
   if (!downToggleEl.checked) downPaymentEl.value = '';
 });
 
-/* Toast helper */
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add('show');
   setTimeout(()=> toast.classList.remove('show'), 2400);
 }
 
-/* Format PHP */
 function toPHP(n){
   return Number(n).toLocaleString('en-PH', { style:'currency', currency:'PHP', maximumFractionDigits:2 });
 }
 
-/* Calculate button */
 calcBtn.addEventListener('click', () => {
   let price = parseFloat(priceEl.value);
   const term = parseInt(termEl.value,10);
@@ -74,7 +64,6 @@ calcBtn.addEventListener('click', () => {
     return;
   }
 
-  /* DOWNPAYMENT DEDUCTION */
   let downAmt = 0;
   if (downToggleEl.checked){
     downAmt = parseFloat(downPaymentEl.value);
@@ -86,7 +75,7 @@ calcBtn.addEventListener('click', () => {
       alert('Downpayment must be less than item price');
       return;
     }
-    price = price - downAmt; // principal reduced
+    price = price - downAmt;
   }
 
   let ratePct;
@@ -105,7 +94,6 @@ calcBtn.addEventListener('click', () => {
   let monthlyPayment = 0;
   let totalInterest = 0;
 
-  /* SIMPLE ADD-ON */
   if (interestType === 'simple'){
     totalInterest = price * r * term;
     monthlyPayment = (price + totalInterest)/term;
@@ -116,12 +104,9 @@ calcBtn.addEventListener('click', () => {
       const endBal = +(price - monthlyPrincipal*i).toFixed(2);
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, price - monthlyPrincipal*(i-1), monthlyInterest, monthlyPrincipal, endBal));
     }
-
-  /* AMORTIZED */
   } else if(interestType === 'amortized'){
     monthlyPayment = r===0? price/term : (price*r)/(1-Math.pow(1+r,-term));
     let remaining = price;
-
     for(let i=1;i<=term;i++){
       const interest = remaining*r;
       const principal = monthlyPayment - interest;
@@ -130,25 +115,19 @@ calcBtn.addEventListener('click', () => {
       remaining = endBal;
       totalInterest += interest;
     }
-
-  /* FIXED */
   } else if(interestType === 'fixed'){
     const interestAmt = price*r;
     const monthlyPrincipal = price/term;
     monthlyPayment = monthlyPrincipal + interestAmt;
     totalInterest = interestAmt * term;
-
     let balRem = price;
     for(let i=1;i<=term;i++){
       balRem -= monthlyPrincipal;
       breakdownTbody.insertAdjacentHTML('beforeend', row(i, monthlyPrincipal, interestAmt, monthlyPayment, balRem>0?balRem:0));
     }
-
-  /* COMPOUND */
   } else if(interestType === 'compound'){
     let bal = price;
     monthlyPayment = price/term;
-
     for(let i=1;i<=term;i++){
       const interest = bal*r;
       const principal = monthlyPayment;
@@ -159,19 +138,14 @@ calcBtn.addEventListener('click', () => {
     }
   }
 
-  /* SUMMARY */
   summaryCard.classList.remove('hidden');
-  principalVal.textContent = downToggleEl.checked
-    ? `${toPHP(price)} (after downpayment)`
-    : toPHP(price);
-
+  principalVal.textContent = downToggleEl.checked ? `${toPHP(price)} (after downpayment)` : toPHP(price);
   totalInterestVal.textContent = toPHP(totalInterest);
   monthlyVal.textContent = toPHP(monthlyPayment);
 
   showToast('Calculation done');
 });
 
-/* Clear button */
 clearBtn.addEventListener('click', ()=>{
   priceEl.value='';
   downToggleEl.checked=false;
@@ -186,21 +160,4 @@ clearBtn.addEventListener('click', ()=>{
   summaryCard.classList.add('hidden');
   principalVal.textContent='—';
   totalInterestVal.textContent='—';
-  monthlyVal.textContent='—';
-  showToast('Cleared');
-});
-
-/* Build table row */
-function row(i,begBal,interestAmt,principalAmt,endBal){
-  return `<tr>
-    <td>${i}</td>
-    <td>${toPHP(begBal)}</td>
-    <td>${toPHP(interestAmt)}</td>
-    <td>${toPHP(principalAmt)}</td>
-    <td>${toPHP(endBal)}</td>
-  </tr>`;
-}
-
-/* MATRIX MODAL */
-matrixBtn.addEventListener('click', ()=>{ matrixModal.style.display='flex'; });
-closeMatrix.addEventListener('click', ()=>{ matrixModal.style.display='none'; });
+  monthlyVal.textContent
