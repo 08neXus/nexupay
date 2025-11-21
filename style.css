@@ -104,15 +104,15 @@ input,select{
   width:100%;
   border-collapse:collapse;
   margin-top:12px;
-  font-size:14px;
+  font-size:12px;
 }
 .matrix-table th{
   background:#f3eefc;
-  padding:10px;
+  padding:6px;
   border-bottom:1px solid #e6ddfa;
 }
 .matrix-table td{
-  padding:8px;
+  padding:5px;
   border-bottom:1px solid #efe7fb;
 }
 
@@ -131,17 +131,12 @@ input,select{
 .s-value{font-size:15px;font-weight:700}
 
 /* Table */
-.table-wrapper{margin-top:16px;padding:6px;background:#fff;border-radius:12px;overflow-x:auto;}
-.table{width:100%;border-collapse:collapse;font-size:13px}
-.table th{
-  background:#faf6ff;
-  padding:8px;
-  border-bottom:1px solid #efe7fb;
-}
-.table td{
-  padding:8px;
-  border-bottom:1px solid #f2eef8;
-}
+.table-wrapper{margin-top:16px;padding:6px;background:#fff;border-radius:12px;overflow-x:hidden;}
+.table{width:100%;border-collapse:collapse;font-size:11px;}
+.table th, .table td{padding:6px;text-align:center;border-bottom:1px solid #f2eef8;}
+.table th{background:#faf6ff;font-weight:700;}
+.table tbody tr:nth-child(even){background:#fbf8ff;}
+.table tbody tr:hover{background:#f3eefc;transition:0.12s;}
 
 /* Toast */
 .toast{
@@ -159,3 +154,12 @@ input,select{
 
 /* Footer */
 .footer{text-align:right;margin-top:20px;font-size:13px;color:var(--muted)}
+
+/* Small screen adjustments */
+@media (max-width:420px){
+  .brand-icon{width:46px;height:46px}
+  .card{padding:14px}
+  .table{font-size:10px}
+  .table th, .table td{padding:4px}
+  input[type="number"], select{padding:11px;font-size:13px}
+}
