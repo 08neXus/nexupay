@@ -21,11 +21,6 @@
       </div>
     </header>
 
-    <!-- Preview image (local) 
-    <div style="text-align:center;margin-bottom:12px;">
-      <img src="/mnt/data/DFD6D5D9-BF81-4A3B-BAEE-5FBFEAAAEEAA.jpeg" alt="screenshot preview" style="max-width:280px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08)">
-    </div>-->
-
     <section class="card">
       <div class="row">
         <label class="label">Item Price (₱)</label>
@@ -45,11 +40,12 @@
         </div>
       </div>
 
-      <!-- SINGLE ROW FOR TERM + INTEREST TYPE -->
+      <!-- Payment Term + Interest Type -->
       <div class="row two-col">
         <div class="col">
           <label class="label">Payment Term</label>
           <select id="term" onchange="updateAutoRate()">
+            <option value="0" selected>0 months (full payment)</option>
             <option value="3">3 months</option>
             <option value="6">6 months</option>
             <option value="9">9 months</option>
@@ -69,7 +65,7 @@
         </div>
       </div>
 
-      <!-- CUSTOM INTEREST WITH LABEL ABOVE -->
+      <!-- Custom interest -->
       <div class="row">
         <label class="label">Use custom interest rate</label>
         <div class="row two-col">
@@ -98,18 +94,16 @@
         </button>
       </div>
 
-      <!-- POPUP MODAL (liquid glass) -->
+      <!-- POPUP MODAL -->
       <div id="matrixModal" class="popup-overlay" aria-hidden="true">
-        <div class="popup" role="dialog" aria-modal="true" aria-labelledby="matrixTitle">
-          <h3 id="matrixTitle">Monthly Add-On Interest Matrix</h3>
-          <table class="matrix-table" role="table">
+        <div class="popup" role="dialog" aria-modal="true">
+          <h3>Monthly Add-On Interest Matrix</h3>
+          <table class="matrix-table">
             <thead>
-              <tr>
-                <th>Term (Months)</th>
-                <th>Fixed Monthly Add-On Rate</th>
-              </tr>
+              <tr><th>Term</th><th>Rate</th></tr>
             </thead>
             <tbody>
+              <tr><td>0</td><td>0%</td></tr>
               <tr><td>3</td><td>1.5%</td></tr>
               <tr><td>6</td><td>2%</td></tr>
               <tr><td>9</td><td>2.5%</td></tr>
@@ -121,8 +115,8 @@
         </div>
       </div>
 
-      <!-- SUMMARY (three boxes) -->
-      <div class="row summary-row hidden" id="summaryCard" aria-live="polite">
+      <!-- SUMMARY -->
+      <div class="row summary-row hidden" id="summaryCard">
         <div class="summary-item">
           <div class="s-label">Principal</div>
           <div class="s-value" id="principalVal">—</div>
@@ -137,15 +131,16 @@
         </div>
       </div>
 
-      <!-- B2: Strong glass full-width Total Amount Payable card -->
-      <div id="totalAfterRow" class="row total-full-card hidden" aria-live="polite">
+      <!-- TOTAL AMOUNT PAYABLE -->
+      <div id="totalAfterRow" class="row total-full-card hidden">
         <div class="total-full-inner">
           <div class="t-label">Total Amount Payable</div>
           <div class="t-value" id="totalAfterVal">—</div>
         </div>
       </div>
 
-      <div class="table-wrapper" aria-live="polite">
+      <!-- BREAKDOWN -->
+      <div class="table-wrapper">
         <table id="breakdown" class="table">
           <thead>
             <tr>
